@@ -101,6 +101,7 @@
     <Image Include="jinxing.bmp" />
     <Image Include="muxing.bmp" />
     <Image Include="shuixing.bmp" />
+    <Image Include="skybackground.bmp" />
     <Image Include="tianwangxing.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
