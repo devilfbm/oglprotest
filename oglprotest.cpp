@@ -18,11 +18,15 @@ const int n = 1000;
 const GLfloat R = 0.5f;
 const GLfloat Pi = 3.1415926536f;
 
+//旋转速度
+static GLfloat xRot = 0.0f;
+static GLfloat yRot = 0.0f;
+static GLfloat zDeep = 0.0f;
+static GLfloat angle = 0.0f;
+
+static GLfloat StarSpeed[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+
 //3D漫游参数
-static float xRot = 0.0f;
-static float yRot = 0.0f;
-static float zDeep = 0.0f;
-static float angle = 0.0f;
 GLfloat x = 0.0f, y = 0.0f, z = 2.0f,
 lx = 0.0f, ly = 0.0f, lz = -1.0f;
 
@@ -195,15 +199,14 @@ void Key(int key, int xx, int yy)
 			ly += 0.1f;
 	}
 	glutPostRedisplay();
-
 }
 
 //绘制场景
 void RenderScene(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);			//Texturing Contour Anchored To The Object
-	glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);			//Texturing Contour Anchored To The Object
+	glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
+	glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
 	glLoadIdentity();
 	gluLookAt(x, y, z,
 		x + lx, y + ly, z + lz,
