@@ -1,3 +1,28 @@
+//=========================================================================
+/**
+*  @file  oglprotest.cpp
+*
+*  项目描述： 天空博物馆
+*  文件描述:  面向过程的OpenGL程序设计
+*  适用平台： VS2013/WIN 8.1 (I only tested this)
+*
+*  作者：     李嘉良
+*  电子邮件:  763450215@qq.com
+*  创建日期： 2014-05-04
+*  修改日期： 2014-05-31
+*
+*  作者：     陈志炯
+*  电子邮件:  867924294@qq.com
+*  创建日期： 2014-05-04
+*  修改日期： 2014-05-31
+*
+*  作者：     黄永智
+*  电子邮件:  273631311@qq.com
+*  创建日期： 2014-05-04
+*  修改日期： 2014-05-31
+*
+*/
+//=========================================================================
 // oglprotest.cpp : 定义控制台应用程序的入口点。
 //
 //顺序不能调转，C++与OPENGL有冲突
@@ -30,12 +55,12 @@ GLfloat x = 0.0f, y = 0.0f, z = 5.0f; /* 摄像机初始坐标 */
 GLfloat lx = 0.0f, ly = 0.0f, lz = -1.0f;
 
 //光照参数
-GLfloat sunLightPos[4] = { 0.0f, 100.0f, -90.0f, 1.0f }; 
 //W = 0.0f 无穷远光
 GLfloat LightPos[4] = { .0f, .0f, .0f, 1.0f };
 GLfloat NoLight[] = { 0.0f, 0.0f, 0.0f, 0.0f };
 GLfloat LowLight[] = { 0.25f, 0.25f, 0.25f, 1.0f };
 GLfloat BrightLight[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+GLfloat EmissiveLight[] = { 1.0f, 0.27f, 0.27f, 0.5f };
 
 //雾气
 GLuint FogMode[] = { GL_EXP /* 老式PC用 */, 
@@ -241,29 +266,28 @@ void RenderScene(void)
 		x + lx, y + ly, z + lz,
 		0, 1.0f, 0);
 
-	glGenLists(LIST_COUNT);
-
-	glNewList(pList[0], GL_COMPILE);
-	glPushMatrix();
 	//开启光照
 	glEnable(GL_LIGHTING);
 	glLightfv(GL_LIGHT0, GL_POSITION, LightPos);
-	//太阳
+	glLightfv(GL_LIGHT1, GL_POSITION, LightPos);
+
+	glGenLists(LIST_COUNT);
+
+	//太阳 水星
+	glNewList(pList[0], GL_COMPILE);
+
+	glPushMatrix();
 	glColor3f(0.5f, 0.0f, 0.0f);
 	glRotatef(angle, 0.0f, 1.0f, 0.0f);
 	glutSolidTorus(.15f, 0.4f, 30, 30);
 	glRotatef(-angle, 0.0f, 1.0f, 0.0f);
 
 	glRotatef(StarRollSpeed[1], 0.0f, 1.0f, 0.0f);
-	//水星
 	glColor3f(0.7f, 0.7f, 0.4f);
 	glTranslatef(0.0f, 0.0f, 2.0f);
 	glEnable(GL_TEXTURE_2D);
 	DrawBall(0.2f, 1);
 	glDisable(GL_TEXTURE_2D);
-
-	//关闭光照
-	glDisable(GL_LIGHTING);
 	glPopMatrix();
 
 	glPushMatrix();
@@ -275,14 +299,13 @@ void RenderScene(void)
 	glPopMatrix();
 
 	DrawRoad(2);
+
 	glEndList();
 
-	glNewList(pList[1], GL_COMPILE);
 	//金星
+	glNewList(pList[1], GL_COMPILE);
+
 	glPushMatrix();
-	//开启光照
-	glEnable(GL_LIGHTING);
-	glLightfv(GL_LIGHT0, GL_POSITION, LightPos);
 
 	glRotatef(StarRollSpeed[2], 0.0f, 1.0f, 0.0f);
 	glColor3f(0.9f, 0.6f, 0.6f);
@@ -291,8 +314,6 @@ void RenderScene(void)
 	DrawBall(0.3f, 2);
 	glDisable(GL_TEXTURE_2D);
 
-	//关闭光照
-	glDisable(GL_LIGHTING);
 	glPopMatrix();
 
 	glPushMatrix();
@@ -302,12 +323,9 @@ void RenderScene(void)
 	DrawRoad(5);
 	glEndList();
 
-	glNewList(pList[2], GL_COMPILE);
 	//地球
+	glNewList(pList[2], GL_COMPILE);
 	glPushMatrix();
-	//开启光照
-	glEnable(GL_LIGHTING);
-	glLightfv(GL_LIGHT0, GL_POSITION, LightPos);
 
 	glRotatef(StarRollSpeed[3], 0.0f, 1.0f, 0.0f);
 	glColor3f(1.0f, 1.0f, 1.0f);
@@ -316,8 +334,6 @@ void RenderScene(void)
 	DrawBall(0.3f, 3);
 	glDisable(GL_TEXTURE_2D);
 
-	//关闭光照
-	glDisable(GL_LIGHTING);
 	glPopMatrix();
 
 	glPushMatrix();
@@ -327,12 +343,9 @@ void RenderScene(void)
 	DrawRoad((GLdouble)sqrt((double)34));
 	glEndList();
 
-	glNewList(pList[3], GL_COMPILE);
 	//火星
+	glNewList(pList[3], GL_COMPILE);
 	glPushMatrix();
-	//开启光照
-	glEnable(GL_LIGHTING);
-	glLightfv(GL_LIGHT0, GL_POSITION, LightPos);
 
 	glRotatef(StarRollSpeed[4], 0.0f, 1.0f, 0.0f);
 	glColor3f(0.7f, 0.3f, 0.2f);
@@ -341,8 +354,6 @@ void RenderScene(void)
 	DrawBall(0.32f, 4);
 	glDisable(GL_TEXTURE_2D);
 
-	//关闭光照
-	glDisable(GL_LIGHTING);
 	glPopMatrix();
 
 	glPushMatrix();
@@ -355,12 +366,9 @@ void RenderScene(void)
 	glPopMatrix();
 	glEndList();
 
-	glNewList(pList[4], GL_COMPILE);
 	//木星
+	glNewList(pList[4], GL_COMPILE);
 	glPushMatrix();
-	//开启光照
-	glEnable(GL_LIGHTING);
-	glLightfv(GL_LIGHT0, GL_POSITION, LightPos);
 
 	glRotatef(StarRollSpeed[5], 0.0f, 1.0f, 0.0f);
 	glColor3f(1.0f, 1.0f, 1.0f);
@@ -369,8 +377,6 @@ void RenderScene(void)
 	DrawBall(0.34f, 5);
 	glDisable(GL_TEXTURE_2D);
 
-	//关闭光照
-	glDisable(GL_LIGHTING);
 	glPopMatrix();
 
 	glPushMatrix();
@@ -383,20 +389,15 @@ void RenderScene(void)
 	glPopMatrix();
 	glEndList();
 
-	glNewList(pList[5], GL_COMPILE);
 	//土星
+	glNewList(pList[5], GL_COMPILE);
 	glPushMatrix();
-	//开启光照
-	glEnable(GL_LIGHTING);
-	glLightfv(GL_LIGHT0, GL_POSITION, LightPos);
 
 	glRotatef(StarRollSpeed[6], 0.0f, 1.0f, 0.0f);
 	glColor3f(0.7f, 0.6f, 0.3f);
 	glTranslatef(7.0, .0f, -6.0f);
 	DrawTorusBall();
 
-	//关闭光照
-	glDisable(GL_LIGHTING);
 	glPopMatrix();
 
 	glPushMatrix();
@@ -406,12 +407,9 @@ void RenderScene(void)
 	DrawRoad((GLdouble)sqrt((double)(49 + 36)));
 	glEndList();
 
-	glNewList(pList[6], GL_COMPILE);
 	//天王星
+	glNewList(pList[6], GL_COMPILE);
 	glPushMatrix();
-	//开启光照
-	glEnable(GL_LIGHTING);
-	glLightfv(GL_LIGHT0, GL_POSITION, LightPos);
 
 	glRotatef(StarRollSpeed[7], 0.0f, 1.0f, 0.0f);
 	glColor3f(0.5f, 0.5f, 0.5f);
@@ -420,8 +418,6 @@ void RenderScene(void)
 	DrawBall(.5f, 7);
 	glDisable(GL_TEXTURE_2D);
 
-	//关闭光照
-	glDisable(GL_LIGHTING);
 	glPopMatrix();
 
 	glPushMatrix();
@@ -431,12 +427,9 @@ void RenderScene(void)
 	DrawRoad((GLdouble)sqrt((double)(81 + 64)));
 	glEndList();
 
-	glNewList(pList[7], GL_COMPILE);
 	//海王星
+	glNewList(pList[7], GL_COMPILE);
 	glPushMatrix();
-	//开启光照
-	glEnable(GL_LIGHTING);
-	glLightfv(GL_LIGHT0, GL_POSITION, LightPos);
 
 	glRotatef(StarRollSpeed[8], 0.0f, 1.0f, 0.0f);
 	glColor3f(0.5f, 0.8f, 0.5f);
@@ -445,8 +438,6 @@ void RenderScene(void)
 	DrawBall(.5f, 8);
 	glDisable(GL_TEXTURE_2D);
 
-	//关闭光照
-	glDisable(GL_LIGHTING);
 	glPopMatrix();
 
 	glPushMatrix();
@@ -462,14 +453,17 @@ void RenderScene(void)
 	sky->InitSky(0.0f, 0.0f, 0.0f, 20.0f, StarMap[9]);
 	sky->ShowSky();
 
-	// Do the buffer Swap
+	//关闭光照
+	glDisable(GL_LIGHTING);
+
+	//交换缓存
 	glutSwapBuffers();
 }
 
 //载入贴图
 void MyInit()
 {
-	glClearColor(0.8f, 0.8f, 0.8f, 1.0f);
+	glClearColor(0.15f, 0.15f, 0.15f, 1.0f);
 	
 	//反走样
 	glEnable(GL_POINT_SMOOTH);
@@ -478,7 +472,8 @@ void MyInit()
 	glHint(GL_LINE_SMOOTH_HINT, GL_NICEST); 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
+	
+	//光照模型
 	glFrontFace(GL_CCW);
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
@@ -489,6 +484,9 @@ void MyInit()
 	glLightfv(GL_LIGHT0, GL_AMBIENT, LowLight);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, BrightLight);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, BrightLight);
+
+	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, EmissiveLight);
+	glLightfv(GL_LIGHT1, GL_EMISSION, EmissiveLight);
 
 	glEnable(GL_COLOR_MATERIAL);
 	glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
