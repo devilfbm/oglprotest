@@ -34,6 +34,12 @@ GLfloat nolight[] = { 0.0f, 0.0f, 0.0f, 0.0f };
 GLfloat lowlight[] = { 0.25f, 0.25f, 0.25f, 1.0f };
 GLfloat Brightlight[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
+//雾气
+GLuint filter;      // 使用哪一个纹理过滤器
+GLuint FogMode[] = { GL_EXP, GL_EXP2, GL_LINEAR };  // 雾气的模式
+GLuint FogFilter = 2;     // 使用哪一种雾气
+GLfloat FogColor[4] = { 0.8f, 0.8f, 0.8f, 1.0f };  // 雾的颜色设为白色
+
 //贴图储存位置  
 UINT g_cactus[16];  
 GLUquadricObj *g_text;
@@ -72,10 +78,10 @@ bool LoadTex(LPCWSTR filename, GLuint &texture)//调8位贴图
 void DrawGround()
 {
 	glBegin(GL_QUADS);
-	glColor3f(.2f, 0.2f, .2f);
+	glColor3f(.15f, 0.15f, .15f);
 	glVertex3f(-100.0f, -0.8f, 100.0f);
 	glVertex3f(100.0f, -0.8f, 100.0f);
-	glColor3f(.9f, .9f, .9f);
+	glColor3f(.5f, .5f, .5f);
 	glVertex3f(100.0f, -0.8f, -100.0f);
 	glVertex3f(-100.0f, -0.8f, -100.0f);
 	glEnd();
@@ -406,6 +412,13 @@ void MyInit()
 {
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 
+	glFogi(GL_FOG_MODE, FogMode[FogFilter]);  // 设置雾气的模式
+	glFogfv(GL_FOG_COLOR, FogColor);   // 设置雾的颜色
+	glFogf(GL_FOG_DENSITY, 0.12f);   // 设置雾的密度
+	glHint(GL_FOG_HINT, GL_DONT_CARE);   // 设置系统如何计算雾气
+	glFogf(GL_FOG_START, 1.0f);    // 雾气的开始位置
+	glFogf(GL_FOG_END, 50.0f);    // 雾气的结束位置
+	glEnable(GL_FOG);     // 使用雾气
 
 	g_text = gluNewQuadric();
 	LPCWSTR filename = _T("sun.bmp");
@@ -444,7 +457,7 @@ void SetupRC()
 	//glFrontFace(GL_CCW);
 	//glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
-	glClearColor(0.25f, 0.25f, 0.25f, 1.0f);
+	glClearColor(0.15f, 0.15f, 0.15f, 1.0f);
 	// Draw everything as wire frame
 	glPolygonMode(GL_FRONT, GL_FILL);
 	glEnable(GL_LIGHTING);
