@@ -44,6 +44,9 @@ GLfloat FogColor[4] = { 0.8f, 0.8f, 0.8f, 1.0f };  // 雾的颜色设为白色
 UINT g_cactus[16];  
 GLUquadricObj *g_text;
 
+#define LIST_COUNT 8
+static unsigned int* pList = new unsigned int[LIST_COUNT];
+
 //载入贴图
 bool LoadTex(LPCWSTR filename, GLuint &texture)//调8位贴图  
 {
@@ -181,6 +184,9 @@ void Key(int key, int xx, int yy)
 			break;
 		case GLUT_KEY_PAGE_UP:
 			ly += 0.1f;
+			break;
+		case 27:
+			exit(0);
 	}
 	glutPostRedisplay();
 
@@ -192,15 +198,13 @@ void RenderScene(void)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);			//Texturing Contour Anchored To The Object
 	glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);			//Texturing Contour Anchored To The Object
+	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	gluLookAt(x, y, z,
-		x + lx, y + ly, z + lz,
-		0, 1.0f, 0);
+	gluLookAt(x, y, z,	x + lx, y + ly, z + lz, 0, 1.0f, 0);
 
+	glGenLists(LIST_COUNT);
 
-	//DrawGround();
-	//glColor3f(.25f, .25f, .25f);
-	//DrawGroundLine();
+	glNewList(pList[0], GL_COMPILE);
 
 	glPushMatrix();
 	//开启光照
@@ -234,6 +238,9 @@ void RenderScene(void)
 
 	DrawRoad(2);
 
+	glEndList();
+
+	glNewList(pList[1], GL_COMPILE);
 	//金星
 	glPushMatrix();
 	//开启光照
@@ -257,6 +264,9 @@ void RenderScene(void)
 
 	DrawRoad(5);
 
+	glEndList();
+
+	glNewList(pList[2], GL_COMPILE);
 	//地球
 	glPushMatrix();
 	//开启光照
@@ -279,7 +289,9 @@ void RenderScene(void)
 	glPopMatrix();
 
 	DrawRoad((GLdouble)sqrt((double)34));
+	glEndList();
 
+	glNewList(pList[3], GL_COMPILE);
 	//火星
 	glPushMatrix();
 	//开启光照
@@ -305,7 +317,10 @@ void RenderScene(void)
 	glTranslatef(.0, .2f, .0f);
 	DrawRoad((GLdouble)sqrt((double)(36 + 16)));
 	glPopMatrix();
+	
+	glEndList();
 
+	glNewList(pList[4], GL_COMPILE);
 	//木星
 	glPushMatrix();
 	//开启光照
@@ -332,6 +347,9 @@ void RenderScene(void)
 	DrawRoad((GLdouble)sqrt((double)(36 + 25)));
 	glPopMatrix();
 
+	glEndList();
+
+	glNewList(pList[5], GL_COMPILE);
 	//土星
 	glPushMatrix();
 	//开启光照
@@ -353,6 +371,9 @@ void RenderScene(void)
 
 	DrawRoad((GLdouble)sqrt((double)(49 + 36)));
 
+	glEndList();
+
+	glNewList(pList[6], GL_COMPILE);
 	//天王星
 	glPushMatrix();
 	//开启光照
@@ -376,6 +397,9 @@ void RenderScene(void)
 
 	DrawRoad((GLdouble)sqrt((double)(81 + 64)));
 
+	glEndList();
+
+	glNewList(pList[7], GL_COMPILE);
 	//海王星
 	glPushMatrix();
 	//开启光照
@@ -398,13 +422,23 @@ void RenderScene(void)
 	glPopMatrix();
 
 	DrawRoad((GLdouble)sqrt((double)(200)));
-	
+	glEndList();
+
+	glCallLists(8, GL_UNSIGNED_INT, pList);
+
 	Sky *sky = new Sky();
 	sky->InitSky(0.0f, 0.0f, 0.0f, 20.0f, g_cactus[9]);
 	sky->ShowSky();
 
 	// Do the buffer Swap
 	glutSwapBuffers();
+}
+
+// 显示列表数组
+void GenList()
+{
+	for (int i = 1; i <= LIST_COUNT; i++)
+		pList[i - 1] = i;
 }
 
 //载入贴图
@@ -521,6 +555,7 @@ int main(int argc, char* argv[])
 	glutInitWindowSize(1366, 768);
 	glutCreateWindow("Graphic Project 2: Star Show");
 	MyInit();
+	GenList();
 	glutReshapeFunc(Reshape);
 	glutDisplayFunc(RenderScene);
 
