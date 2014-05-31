@@ -26,7 +26,7 @@ void Sky::InitSky(float skyX, float skyY, float skyZ, float skyR, GLuint texture
 void Sky::ShowSky()
 {
 	static float r = 0.0;
-	r += 2.0f;
+	r += 0.5f;
 	glEnable(GL_TEXTURE_2D);
 	glFrontFace(GL_CW);
 	glPushMatrix();
