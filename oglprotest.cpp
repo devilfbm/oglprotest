@@ -29,10 +29,10 @@ lx = 0.0f, ly = 0.0f, lz = -1.0f;
 //光照参数
 GLfloat sunLightPos[4] = { 0.0f, 100.0f, -90.0f, 1.0f }; 
 //W = 0.0f 无穷远光
-GLfloat lightPos[4] = { .0f, .0f, .0f, 1.0f };
-GLfloat nolight[] = { 0.0f, 0.0f, 0.0f, 0.0f };
-GLfloat lowlight[] = { 0.25f, 0.25f, 0.25f, 1.0f };
-GLfloat Brightlight[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+GLfloat LightPos[4] = { .0f, .0f, .0f, 1.0f };
+GLfloat NoLight[] = { 0.0f, 0.0f, 0.0f, 0.0f };
+GLfloat LowLight[] = { 0.25f, 0.25f, 0.25f, 1.0f };
+GLfloat BrightLight[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 //雾气
 GLuint filter;      // 使用哪一个纹理过滤器
@@ -43,6 +43,18 @@ GLfloat FogColor[4] = { 0.8f, 0.8f, 0.8f, 1.0f };  // 雾的颜色设为白色
 //贴图储存位置  
 UINT g_cactus[16];  
 GLUquadricObj *g_text;
+
+//添加菜单
+void menuHandler(int value)
+{
+	if (value == 1)
+	{
+	}
+	if (value == 2)
+	{
+	}
+	glutPostRedisplay();
+}
 
 //载入贴图
 bool LoadTex(LPCWSTR filename, GLuint &texture)//调8位贴图  
@@ -197,7 +209,7 @@ void RenderScene(void)
 		x + lx, y + ly, z + lz,
 		0, 1.0f, 0);
 
-
+	//地面 & 网格线
 	//DrawGround();
 	//glColor3f(.25f, .25f, .25f);
 	//DrawGroundLine();
@@ -205,7 +217,7 @@ void RenderScene(void)
 	glPushMatrix();
 	//开启光照
 	glEnable(GL_LIGHTING);
-	glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
+	glLightfv(GL_LIGHT0, GL_POSITION, LightPos);
 	//太阳
 	glColor3f(0.5f, 0.0f, 0.0f);
 	glRotatef(angle, 0.0f, 0.4f, 0.0f);
@@ -238,7 +250,7 @@ void RenderScene(void)
 	glPushMatrix();
 	//开启光照
 	glEnable(GL_LIGHTING);
-	glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
+	glLightfv(GL_LIGHT0, GL_POSITION, LightPos);
 
 	glRotatef(angle, 0.0f, 0.77f, 0.0f);
 	glColor3f(0.9f, 0.6f, 0.6f);
@@ -261,7 +273,7 @@ void RenderScene(void)
 	glPushMatrix();
 	//开启光照
 	glEnable(GL_LIGHTING);
-	glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
+	glLightfv(GL_LIGHT0, GL_POSITION, LightPos);
 
 	glRotatef(angle, 0.0f, 0.8f, 0.0f);
 	glColor3f(1.0f, 1.0f, 1.0f);
@@ -284,7 +296,7 @@ void RenderScene(void)
 	glPushMatrix();
 	//开启光照
 	glEnable(GL_LIGHTING);
-	glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
+	glLightfv(GL_LIGHT0, GL_POSITION, LightPos);
 
 	glRotatef(angle, 0.0f, 0.75f, 0.0f);
 	glColor3f(0.7f, 0.3f, 0.2f);
@@ -310,7 +322,7 @@ void RenderScene(void)
 	glPushMatrix();
 	//开启光照
 	glEnable(GL_LIGHTING);
-	glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
+	glLightfv(GL_LIGHT0, GL_POSITION, LightPos);
 
 	glRotatef(angle, 0.0f, 0.6f, 0.0f);
 	glColor3f(1.0f, 1.0f, 1.0f);
@@ -336,7 +348,7 @@ void RenderScene(void)
 	glPushMatrix();
 	//开启光照
 	glEnable(GL_LIGHTING);
-	glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
+	glLightfv(GL_LIGHT0, GL_POSITION, LightPos);
 
 	glRotatef(angle, 0.0f, 0.6f, 0.0f);
 	glColor3f(0.7f, 0.6f, 0.3f);
@@ -357,7 +369,7 @@ void RenderScene(void)
 	glPushMatrix();
 	//开启光照
 	glEnable(GL_LIGHTING);
-	glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
+	glLightfv(GL_LIGHT0, GL_POSITION, LightPos);
 
 	glRotatef(angle, 0.0f, 0.2f, -0.0f);
 	glColor3f(0.5f, 0.5f, 0.5f);
@@ -380,7 +392,7 @@ void RenderScene(void)
 	glPushMatrix();
 	//开启光照
 	glEnable(GL_LIGHTING);
-	glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
+	glLightfv(GL_LIGHT0, GL_POSITION, LightPos);
 
 	glRotatef(angle, 0.0f, 0.3f, 0.0f);
 	glColor3f(0.5f, 0.8f, 0.5f);
@@ -462,10 +474,10 @@ void SetupRC()
 	glPolygonMode(GL_FRONT, GL_FILL);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
-	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, nolight);
-	glLightfv(GL_LIGHT0, GL_AMBIENT, lowlight);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, Brightlight);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, Brightlight);
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, NoLight);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, LowLight);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, BrightLight);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, BrightLight);
 
 	glEnable(GL_COLOR_MATERIAL);
 	glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
@@ -473,12 +485,10 @@ void SetupRC()
 
 }
 
-///////////////////////////////////////////////////////////
-// Called by GLUT library when idle (window not being
-// resized or moved)
+// Called by GLUT library when idle (window not being resized or moved)
 void TimerFunction(int value)
 {
-	// Redraw the scene with new coordinates
+	//重绘场景
 	angle += 3.0f;
 	xRot += 5.0f;
 	if (xRot >= 360)
@@ -493,6 +503,7 @@ void TimerFunction(int value)
 	glutTimerFunc(60, TimerFunction, 1);
 }
 
+//
 void Reshape(GLsizei w, GLsizei h)
 {
 	GLfloat fAspect;
@@ -514,6 +525,7 @@ void Reshape(GLsizei w, GLsizei h)
 	glTranslatef(0.0f, 10.f, 0.0f);
 }
 
+//主函数
 int main(int argc, char* argv[])
 {
 	glutInit(&argc, argv);
@@ -523,6 +535,14 @@ int main(int argc, char* argv[])
 	MyInit();
 	glutReshapeFunc(Reshape);
 	glutDisplayFunc(RenderScene);
+
+	//注册菜单回调函数
+	glutCreateMenu(menuHandler);
+	//添加菜单项
+	glutAddMenuEntry("Stop", 1);
+	glutAddMenuEntry("Roll", 2);
+	//把当前菜单注册到鼠标中键
+	glutAttachMenu(GLUT_RIGHT_BUTTON);
 
 	SetupRC();
 	glutTimerFunc(60, TimerFunction, 1);
