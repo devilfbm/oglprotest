@@ -46,7 +46,7 @@ GLuint FogFilter = 2;     // 使用哪一种雾气
 GLfloat FogColor[4] = { 0.8f, 0.8f, 0.8f, 1.0f };  // 雾的颜色设为白色
 
 //贴图储存位置  
-GLuint g_cactus[16];
+GLuint StarMap[16];
 GLUquadricObj *g_text;
 
 //标志位
@@ -168,7 +168,7 @@ void DrawTitle(char *string, GLdouble x, GLdouble y, GLdouble z, GLdouble r, GLf
 void DrawBall(GLdouble Radius, int n)
 {
 	glPushMatrix();
-	glBindTexture(GL_TEXTURE_2D, g_cactus[n]);//
+	glBindTexture(GL_TEXTURE_2D, StarMap[n]);//
 	gluSphere(g_text, Radius, 32, 32);   /* draw sun */
 	gluQuadricTexture(g_text, GLU_TRUE);              //建立纹理坐标
 	gluQuadricDrawStyle(g_text, GLU_FILL);            //用面填充
@@ -312,6 +312,7 @@ void RenderScene(void)
 	glRotatef(StarRollSpeed[3], 0.0f, 0.8f, 0.0f);
 	glColor3f(1.0f, 1.0f, 1.0f);
 	glTranslatef(-5.0, 0.0, 3.0f);
+	glRotatef(.1f, 0.0f, .0f, 0.0f);
 	glEnable(GL_TEXTURE_2D);
 	DrawBall(0.3f, 3);
 	glDisable(GL_TEXTURE_2D);
@@ -459,7 +460,7 @@ void RenderScene(void)
 	glCallLists(8, GL_UNSIGNED_INT, pList);
 
 	Sky *sky = new Sky();
-	sky->InitSky(0.0f, 0.0f, 0.0f, 20.0f, g_cactus[9]);
+	sky->InitSky(0.0f, 0.0f, 0.0f, 20.0f, StarMap[9]);
 	sky->ShowSky();
 
 	// Do the buffer Swap
@@ -471,35 +472,35 @@ void MyInit()
 {
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 
-	glFogi(GL_FOG_MODE, FogMode[FogFilter]);  // 设置雾气的模式
-	glFogfv(GL_FOG_COLOR, FogColor);   // 设置雾的颜色
-	glFogf(GL_FOG_DENSITY, 0.12f);   // 设置雾的密度
-	glHint(GL_FOG_HINT, GL_DONT_CARE);   // 设置系统如何计算雾气
-	glFogf(GL_FOG_START, 1.0f);    // 雾气的开始位置
-	glFogf(GL_FOG_END, 50.0f);    // 雾气的结束位置
-	glEnable(GL_FOG);     // 使用雾气
+	glFogi(GL_FOG_MODE, FogMode[FogFilter]);  /* 设置雾气的模式 */
+	glFogfv(GL_FOG_COLOR, FogColor);   /* 设置雾的颜色 */
+	glFogf(GL_FOG_DENSITY, 0.12f);   /* 设置雾的密度 */
+	glHint(GL_FOG_HINT, GL_DONT_CARE);   /* 设置系统如何计算雾气 */
+	glFogf(GL_FOG_START, 1.0f);    /* 雾气的开始位置 */
+	glFogf(GL_FOG_END, 50.0f);    /* 雾气的结束位置 */
+	glEnable(GL_FOG);     /* 使用雾气 */
 
 	g_text = gluNewQuadric();
 	LPCWSTR filename = _T("sun.bmp");
-	LoadTex(filename, g_cactus[0]);
+	LoadTex(filename, StarMap[0]);
 	filename = _T("shuixing.bmp");
-	LoadTex(filename, g_cactus[1]);
+	LoadTex(filename, StarMap[1]);
 	filename = _T("jinxing.bmp");
-	LoadTex(filename, g_cactus[2]);
+	LoadTex(filename, StarMap[2]);
 	filename = _T("earth.bmp");
-	LoadTex(filename, g_cactus[3]);
+	LoadTex(filename, StarMap[3]);
 	filename = _T("huoxing.bmp");
-	LoadTex(filename, g_cactus[4]);
+	LoadTex(filename, StarMap[4]);
 	filename = _T("muxing.bmp");
-	LoadTex(filename, g_cactus[5]);
+	LoadTex(filename, StarMap[5]);
 	filename = _T("huoxing.bmp");
-	LoadTex(filename, g_cactus[6]);
+	LoadTex(filename, StarMap[6]);
 	filename = _T("tianwangxing.bmp");
-	LoadTex(filename, g_cactus[7]);
+	LoadTex(filename, StarMap[7]);
 	filename = _T("haiwangxing.bmp");
-	LoadTex(filename, g_cactus[8]);
+	LoadTex(filename, StarMap[8]);
 	filename = _T("skybackground.bmp");
-	LoadTex(filename, g_cactus[9]);
+	LoadTex(filename, StarMap[9]);
 }
 
 void SetupRC()
