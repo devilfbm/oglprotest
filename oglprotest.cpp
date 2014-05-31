@@ -42,7 +42,7 @@ GLfloat BrightLight[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 GLuint filter;      // 使用哪一个纹理过滤器
 GLuint FogMode[] = { GL_EXP, GL_EXP2, GL_LINEAR };  // 雾气的模式
 GLuint FogFilter = 2;     // 使用哪一种雾气
-GLfloat FogColor[4] = { 0.8f, 0.8f, 0.8f, 1.0f };  // 雾的颜色设为白色
+GLfloat FogColor[4] = { 0.2f, 0.2f, 0.2f, .3f };  // 雾的颜色设为白色
 
 //贴图储存位置  
 UINT g_cactus[16];  
