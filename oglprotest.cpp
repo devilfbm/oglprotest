@@ -11,6 +11,7 @@
 #define GLUT_DISABLE_ATEXIT_HACK
 #include <gl/glut.h>
 #include "math3d.h"
+#include "sky.h"
 
 //绘制轨道参数
 const int n = 1000;
@@ -189,11 +190,11 @@ void RenderScene(void)
 	gluLookAt(x, y, z,
 		x + lx, y + ly, z + lz,
 		0, 1.0f, 0);
-	
-	DrawGround();
-	glColor3f(.25f, .25f, .25f);
-	DrawGroundLine();
 
+
+	//DrawGround();
+	//glColor3f(.25f, .25f, .25f);
+	//DrawGroundLine();
 
 	glPushMatrix();
 	//开启光照
@@ -392,6 +393,9 @@ void RenderScene(void)
 
 	DrawRoad((GLdouble)sqrt((double)(200)));
 	
+	Sky *sky = new Sky();
+	sky->InitSky(0.0f, 0.0f, 0.0f, 20.0f, g_cactus[9]);
+	sky->ShowSky();
 
 	// Do the buffer Swap
 	glutSwapBuffers();
@@ -422,7 +426,8 @@ void MyInit()
 	LoadTex(filename, g_cactus[7]);
 	filename = _T("haiwangxing.bmp");
 	LoadTex(filename, g_cactus[8]);
-
+	filename = _T("skybackground.bmp");
+	LoadTex(filename, g_cactus[9]);
 }
 
 void SetupRC()
@@ -493,6 +498,7 @@ void Reshape(GLsizei w, GLsizei h)
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+	glTranslatef(0.0f, 10.f, 0.0f);
 }
 
 int main(int argc, char* argv[])
