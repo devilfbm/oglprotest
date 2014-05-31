@@ -23,7 +23,7 @@ const GLfloat Pi = 3.1415926536f;
 static GLfloat HorizonAngle = 0.0f;
 static GLfloat DepthDistance = 0.0f;
 static GLfloat angle = 0.0f;
-static GLfloat StarRollSpeed[9] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+static GLfloat StarRollSpeed[9] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
 
 //3D漫游参数
 GLfloat x = 0.0f, y = 0.0f, z = 5.0f; /* 摄像机初始坐标 */
@@ -41,13 +41,13 @@ GLfloat BrightLight[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 GLuint FogMode[] = { GL_EXP /* 老式PC用 */, 
 					GL_EXP2, 
 					GL_LINEAR /* 淡出淡入 */ 
-				};  // 雾气的模式
-GLuint FogFilter = 2;     // 使用哪一种雾气
-GLfloat FogColor[4] = { 0.8f, 0.8f, 0.8f, 1.0f };  // 雾的颜色设为白色
+				};  /* 雾气的模式 */
+GLuint FogFilter = 2;     /* 使用哪一种雾气 */
+GLfloat FogColor[4] = { 0.1f, 0.1f, 0.1f, 0.5f };  /* 雾的颜色设为白色 */
 
 //贴图储存位置  
 GLuint StarMap[16];
-GLUquadricObj *g_text;
+GLUquadricObj *QuadricObj;
 
 //标志位
 bool RoadActive = true; /* 是否显示轨道 */ 
@@ -155,7 +155,7 @@ void DrawTitle(char *string, GLdouble x, GLdouble y, GLdouble z, GLdouble r, GLf
 		if (string != NULL)
 		{
 			int len = (int)strlen(string);
-			glRasterPos3f(x, y + 0.3, z);
+			glRasterPos3f(x - len / 50.0f, y + 0.3, z);
 			for (int i = 0; i < len; i++)
 			{
 				glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, string[i]);
@@ -169,9 +169,9 @@ void DrawBall(GLdouble Radius, int n)
 {
 	glPushMatrix();
 	glBindTexture(GL_TEXTURE_2D, StarMap[n]);//
-	gluSphere(g_text, Radius, 32, 32);   /* draw sun */
-	gluQuadricTexture(g_text, GLU_TRUE);              //建立纹理坐标
-	gluQuadricDrawStyle(g_text, GLU_FILL);            //用面填充
+	gluSphere(QuadricObj, Radius, 32, 32);   /* draw sun */
+	gluQuadricTexture(QuadricObj, GLU_TRUE);              //建立纹理坐标
+	gluQuadricDrawStyle(QuadricObj, GLU_FILL);            //用面填充
 	glPopMatrix();
 }
 
@@ -196,9 +196,9 @@ void DrawTorusBall()
 }
 
 //处理键盘消息
-void Key(int key, int xx, int yy)
+void Key(int Key, int LocationX, int LocationY)
 {
-	switch (key)
+	switch (Key)
 	{
 		case GLUT_KEY_LEFT:
 			//HorizonAngle += 5.0f;
@@ -250,11 +250,11 @@ void RenderScene(void)
 	glLightfv(GL_LIGHT0, GL_POSITION, LightPos);
 	//太阳
 	glColor3f(0.5f, 0.0f, 0.0f);
-	glRotatef(angle, 0.0f, 0.4f, 0.0f);
+	glRotatef(angle, 0.0f, 1.0f, 0.0f);
 	glutSolidTorus(.15f, 0.4f, 30, 30);
-	glRotatef(-angle, 0.0f, 0.4f, 0.0f);
+	glRotatef(-angle, 0.0f, 1.0f, 0.0f);
 
-	glRotatef(StarRollSpeed[1], 0.0f, 0.4f, 0.0f);
+	glRotatef(StarRollSpeed[1], 0.0f, 1.0f, 0.0f);
 	//水星
 	glColor3f(0.7f, 0.7f, 0.4f);
 	glTranslatef(0.0f, 0.0f, 2.0f);
@@ -284,7 +284,7 @@ void RenderScene(void)
 	glEnable(GL_LIGHTING);
 	glLightfv(GL_LIGHT0, GL_POSITION, LightPos);
 
-	glRotatef(StarRollSpeed[2], 0.0f, 0.77f, 0.0f);
+	glRotatef(StarRollSpeed[2], 0.0f, 1.0f, 0.0f);
 	glColor3f(0.9f, 0.6f, 0.6f);
 	glTranslatef(5.0f, 0.0, 0.0f);
 	glEnable(GL_TEXTURE_2D);
@@ -309,10 +309,9 @@ void RenderScene(void)
 	glEnable(GL_LIGHTING);
 	glLightfv(GL_LIGHT0, GL_POSITION, LightPos);
 
-	glRotatef(StarRollSpeed[3], 0.0f, 0.8f, 0.0f);
+	glRotatef(StarRollSpeed[3], 0.0f, 1.0f, 0.0f);
 	glColor3f(1.0f, 1.0f, 1.0f);
 	glTranslatef(-5.0, 0.0, 3.0f);
-	glRotatef(.1f, 0.0f, .0f, 0.0f);
 	glEnable(GL_TEXTURE_2D);
 	DrawBall(0.3f, 3);
 	glDisable(GL_TEXTURE_2D);
@@ -335,7 +334,7 @@ void RenderScene(void)
 	glEnable(GL_LIGHTING);
 	glLightfv(GL_LIGHT0, GL_POSITION, LightPos);
 
-	glRotatef(StarRollSpeed[4], 0.0f, 0.75f, 0.0f);
+	glRotatef(StarRollSpeed[4], 0.0f, 1.0f, 0.0f);
 	glColor3f(0.7f, 0.3f, 0.2f);
 	glTranslatef(-6.0, .2f, -4.0f);
 	glEnable(GL_TEXTURE_2D);
@@ -363,7 +362,7 @@ void RenderScene(void)
 	glEnable(GL_LIGHTING);
 	glLightfv(GL_LIGHT0, GL_POSITION, LightPos);
 
-	glRotatef(StarRollSpeed[5], 0.0f, 0.6f, 0.0f);
+	glRotatef(StarRollSpeed[5], 0.0f, 1.0f, 0.0f);
 	glColor3f(1.0f, 1.0f, 1.0f);
 	glTranslatef(6.0, .1f, 5.0f);
 	glEnable(GL_TEXTURE_2D);
@@ -391,7 +390,7 @@ void RenderScene(void)
 	glEnable(GL_LIGHTING);
 	glLightfv(GL_LIGHT0, GL_POSITION, LightPos);
 
-	glRotatef(StarRollSpeed[6], 0.0f, 0.6f, 0.0f);
+	glRotatef(StarRollSpeed[6], 0.0f, 1.0f, 0.0f);
 	glColor3f(0.7f, 0.6f, 0.3f);
 	glTranslatef(7.0, .0f, -6.0f);
 	DrawTorusBall();
@@ -414,7 +413,7 @@ void RenderScene(void)
 	glEnable(GL_LIGHTING);
 	glLightfv(GL_LIGHT0, GL_POSITION, LightPos);
 
-	glRotatef(StarRollSpeed[7], 0.0f, 0.2f, -0.0f);
+	glRotatef(StarRollSpeed[7], 0.0f, 1.0f, 0.0f);
 	glColor3f(0.5f, 0.5f, 0.5f);
 	glTranslatef(-9.0, .0f, 8.0f);
 	glEnable(GL_TEXTURE_2D);
@@ -439,7 +438,7 @@ void RenderScene(void)
 	glEnable(GL_LIGHTING);
 	glLightfv(GL_LIGHT0, GL_POSITION, LightPos);
 
-	glRotatef(StarRollSpeed[8], 0.0f, 0.3f, 0.0f);
+	glRotatef(StarRollSpeed[8], 0.0f, 1.0f, 0.0f);
 	glColor3f(0.5f, 0.8f, 0.5f);
 	glTranslatef(-10.0, .0f, -10.0f);
 	glEnable(GL_TEXTURE_2D);
@@ -470,8 +469,32 @@ void RenderScene(void)
 //载入贴图
 void MyInit()
 {
-	glClearColor(0.0, 0.0, 0.0, 0.0);
+	glClearColor(0.8f, 0.8f, 0.8f, 1.0f);
+	
+	//反走样
+	glEnable(GL_POINT_SMOOTH);
+	glEnable(GL_LINE_SMOOTH);
+	glHint(GL_POINT_SMOOTH_HINT, GL_NICEST); 
+	glHint(GL_LINE_SMOOTH_HINT, GL_NICEST); 
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	glFrontFace(GL_CCW);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_DEPTH_TEST);
+	glPolygonMode(GL_FRONT, GL_FILL);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, NoLight);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, LowLight);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, BrightLight);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, BrightLight);
+
+	glEnable(GL_COLOR_MATERIAL);
+	glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
+	glMateriali(GL_FRONT, GL_SHININESS, 128);
+
+	//雾气效果
 	glFogi(GL_FOG_MODE, FogMode[FogFilter]);  /* 设置雾气的模式 */
 	glFogfv(GL_FOG_COLOR, FogColor);   /* 设置雾的颜色 */
 	glFogf(GL_FOG_DENSITY, 0.12f);   /* 设置雾的密度 */
@@ -480,7 +503,8 @@ void MyInit()
 	glFogf(GL_FOG_END, 50.0f);    /* 雾气的结束位置 */
 	glEnable(GL_FOG);     /* 使用雾气 */
 
-	g_text = gluNewQuadric();
+	//读取纹理图片
+	QuadricObj = gluNewQuadric();
 	LPCWSTR filename = _T("sun.bmp");
 	LoadTex(filename, StarMap[0]);
 	filename = _T("shuixing.bmp");
@@ -501,36 +525,6 @@ void MyInit()
 	LoadTex(filename, StarMap[8]);
 	filename = _T("skybackground.bmp");
 	LoadTex(filename, StarMap[9]);
-}
-
-void SetupRC()
-{
-	//投影平面上的三个不处于同一直线上的点
-	M3DVector3f points[3] = { { -30.0f, -149.0f, -20.0f },
-	{ -30.0f, -149.0f, 20.0f },
-	{ 40.0f, -149.0f, 20.0f } };
-	glEnable(GL_DEPTH_TEST);
-	glFrontFace(GL_CCW);
-	glEnable(GL_CULL_FACE);
-	// Bluish background
-	//glCullFace(GL_BACK);
-	//glFrontFace(GL_CCW);
-	//glEnable(GL_CULL_FACE);
-	glEnable(GL_DEPTH_TEST);
-	glClearColor(0.15f, 0.15f, 0.15f, 1.0f);
-	// Draw everything as wire frame
-	glPolygonMode(GL_FRONT, GL_FILL);
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
-	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, NoLight);
-	glLightfv(GL_LIGHT0, GL_AMBIENT, LowLight);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, BrightLight);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, BrightLight);
-
-	glEnable(GL_COLOR_MATERIAL);
-	glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
-	glMateriali(GL_FRONT, GL_SHININESS, 128);
-
 }
 
 // Called by GLUT library when idle (window not being resized or moved)
@@ -608,10 +602,9 @@ int main(int argc, char* argv[])
 	glutAddMenuEntry("Stop/Roll", 1);
 	glutAddMenuEntry("Display Name/Blank", 2);
 	glutAddMenuEntry("Display Road/Blank", 3);
-	//把当前菜单注册到鼠标中键
+	//把当前菜单注册到鼠标右键
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 
-	SetupRC();
 	glutTimerFunc(60, TimerFunction, 1);
 	glutSpecialFunc(Key);
 	glutMainLoop();
