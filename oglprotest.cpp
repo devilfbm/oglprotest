@@ -45,14 +45,15 @@ const GLfloat R = 0.5f;
 const GLfloat Pi = 3.1415926536f;
 
 //旋转速度
-static GLfloat HorizonAngle = 0.0f;
-static GLfloat DepthDistance = 0.0f;
 static GLfloat angle = 0.0f;
 static GLfloat StarRollSpeed[9] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
 
 //3D漫游参数
 GLfloat x = 0.0f, y = 0.0f, z = 5.0f; /* 摄像机初始坐标 */
 GLfloat lx = 0.0f, ly = 0.0f, lz = -1.0f;
+
+static GLfloat HorizonAngle = 0.0f;
+static GLfloat DepthDistance = 0.0f;
 
 //光照参数
 //W = 0.0f 无穷远光
@@ -109,13 +110,13 @@ void menuHandler(int value)
 }
 
 //载入贴图
-bool LoadTex(LPCWSTR filename, GLuint &texture)//调8位贴图  
+bool LoadTex(LPCWSTR filename, GLuint &texture)
 {
 	AUX_RGBImageRec *pImage = NULL;
 	LPCWSTR file = (LPCWSTR)filename;
-	pImage = auxDIBImageLoad(filename);         // 装入位图       
+	pImage = auxDIBImageLoad(filename);     
 	if (pImage == NULL)      
-		return false;       // 确保位图数据已经装入  
+		return false;      
 	//生成纹理 
 	glGenTextures(1, &texture);                 
 	//绑定纹理 
@@ -132,10 +133,10 @@ bool LoadTex(LPCWSTR filename, GLuint &texture)//调8位贴图
 	//释放资源
 	if (pImage != NULL)
 	{
-		free(pImage->data);  //释放位图占据的内存资源  
+		free(pImage->data); 
 	}
 	free(pImage);
-	return true;// 返回true  
+	return true;
 }
 
 //绘制地面
@@ -193,10 +194,10 @@ void DrawTitle(char *string, GLdouble x, GLdouble y, GLdouble z, GLdouble r, GLf
 void DrawBall(GLdouble Radius, int n)
 {
 	glPushMatrix();
-	glBindTexture(GL_TEXTURE_2D, StarMap[n]);//
-	gluSphere(QuadricObj, Radius, 32, 32);   /* draw sun */
-	gluQuadricTexture(QuadricObj, GLU_TRUE);              //建立纹理坐标
-	gluQuadricDrawStyle(QuadricObj, GLU_FILL);            //用面填充
+	glBindTexture(GL_TEXTURE_2D, StarMap[n]);
+	gluSphere(QuadricObj, Radius, 32, 32);  
+	gluQuadricTexture(QuadricObj, GLU_TRUE); 
+	gluQuadricDrawStyle(QuadricObj, GLU_FILL);  
 	glPopMatrix();
 }
 
@@ -208,7 +209,7 @@ void DrawRoad(GLdouble Radius)
 		glLineWidth(1.2);
 		glBegin(GL_LINE_LOOP);
 		for (int i = 0; i < n; i++)
-			glVertex3f(Radius * cos(2 * Pi / n*i), -0.05f, Radius * sin(2 * Pi / n*i));
+			glVertex3f(Radius * cos(2 * Pi / n * i), -0.05f, Radius * sin(2 * Pi / n * i));
 		glEnd();
 	}
 }
@@ -220,19 +221,18 @@ void DrawTorusBall()
 	glutSolidSphere(0.22f, 30, 30);
 }
 
-//处理键盘消息
+//处理键盘消息，后两个参数不使用
 void Key(int Key, int LocationX, int LocationY)
 {
 	switch (Key)
 	{
 		case GLUT_KEY_LEFT:
-			//HorizonAngle += 5.0f;
-			HorizonAngle -= 5.0f;									// 向右侧旋转场景
+			HorizonAngle -= 5.0f;
 			lx = sin(HorizonAngle*3.14 / 180);
 			lz = -cos(HorizonAngle*3.14 / 180);
 			break;
 		case GLUT_KEY_RIGHT:
-			HorizonAngle += 5.0f;								// 向左旋转场景
+			HorizonAngle += 5.0f;
 			lx = sin(HorizonAngle*3.14 / 180);
 			lz = -cos(HorizonAngle*3.14 / 180);
 			break;
@@ -460,7 +460,7 @@ void RenderScene(void)
 	glutSwapBuffers();
 }
 
-//载入贴图
+//程序初始化
 void MyInit()
 {
 	glClearColor(0.15f, 0.15f, 0.15f, 1.0f);
