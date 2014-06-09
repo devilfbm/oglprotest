@@ -14,6 +14,7 @@ public:
 	void Init();
 	void Draw();
 	void Update();
+	bool Crash(GLfloat x, GLfloat y, GLfloat z, GLfloat r);
 private:
 	bool roadActive;
 	bool textActive;
@@ -21,4 +22,4 @@ private:
 	Planet *planetArray[NUM_PLANET];
 };
 
-#endif _SOLAR_SYSTEM_H
+#endif 

@@ -11,6 +11,7 @@ public:
 	~Planet();
 	void Draw();
 	void Update();
+	bool Crash(GLfloat x, GLfloat y, GLfloat z, GLfloat r);
 private:
 	GLUquadricObj *quadricObj;
 	GLuint textureID;
@@ -29,4 +30,4 @@ private:
 	void DrawTitle(char *string, GLdouble x, GLdouble y, GLdouble z, GLdouble r, GLfloat rot);
 };
 
-#endif _PLANET_H_
+#endif 
