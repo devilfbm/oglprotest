@@ -89,6 +89,16 @@ void Planet::DrawTitle(char *string, GLdouble x, GLdouble y, GLdouble z, GLdoubl
 		}
 }
 
+bool Planet::Crash(GLfloat x, GLfloat y, GLfloat z, GLfloat r)
+{
+	GLfloat distance;
+	distance = sqrt(pow(origin_x - x, 2) + pow(origin_y - y, 2) + pow(origin_z - z, 2));
+	if (distance < (r + radius)) 
+		return true;
+	return false;
+}
+
 Planet::~Planet()
 {
+
 }

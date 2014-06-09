@@ -23,7 +23,7 @@ SolarSystem::SolarSystem(bool ra , bool ta, GLuint* texArray)
 
 void SolarSystem::Init()
 {
-	planetArray[0] = new Planet(100, 0.0f, 0.0f, 0.0f, .15f, 0.5f, 0.0f, 0.0f, 3.0f);
+	planetArray[0] = new Planet(textureArray[0], 0.0f, 0.0f, 0.0f, 1.0f, 0.5f, 0.0f, 0.0f, 3.0f);
 	planetArray[1] = new Planet(textureArray[1], 0.0f, 0.0f, 2.0f, 0.2f, 0.7f, 0.7f, 0.4f, 4.8f);
 	planetArray[2] = new Planet(textureArray[2], 5.0f, 0.0f, 0.0f, 0.3f, 0.9f, 0.6f, 0.6f, 3.5f);
 	planetArray[3] = new Planet(textureArray[3], -5.0f, 0.0f, 3.0f, 0.3f, 1.0f, 1.0f, 1.0f, 3.0f);
@@ -36,7 +36,7 @@ void SolarSystem::Init()
 
 void SolarSystem::Draw()
 {
-	for (int i = 1; i < NUM_PLANET; i++) {
+	for (int i = 0; i < NUM_PLANET; i++) {
 		planetArray[i]->Draw();
 	}
 }
@@ -46,4 +46,14 @@ void SolarSystem::Update()
 	for (int i = 0; i < NUM_PLANET; i++) {
 		planetArray[i]->Update;
 	}
+}
+
+bool SolarSystem::Crash(GLfloat x, GLfloat y, GLfloat z, GLfloat r)
+{
+	for (int i = 0; i < NUM_PLANET; i++) {
+		if (planetArray[i]->Crash(x, y, z, r)) {
+			return true;
+		}
+	}
+	return false;
 }
