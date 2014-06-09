@@ -12,8 +12,12 @@ public:
 	void Draw();
 	void Update();
 	bool Crash(GLfloat x, GLfloat y, GLfloat z, GLfloat r);
+	void setRoadActive(bool active);
+	void setTextActive(bool active);
+	void setPlanetName(char *name);
 private:
 	GLUquadricObj *quadricObj;
+	char* planetName;
 	GLuint textureID;
 	GLfloat origin_x;
 	GLfloat origin_y;
@@ -24,10 +28,13 @@ private:
 	GLfloat blue;
 	GLfloat rollSpeed;
 	GLfloat speed;
+	GLfloat roadRadius;
+	bool roadActive;
+	bool textActive;
 	void DrawBall(GLdouble radius, unsigned int texture);
 	void DrawTorusBall();
 	void DrawRoad(GLdouble radius);
-	void DrawTitle(char *string, GLdouble x, GLdouble y, GLdouble z, GLdouble r, GLfloat rot);
+	void DrawTitle(char *string, GLdouble x, GLdouble y, GLdouble z, GLfloat rot);
 };
 
 #endif 
