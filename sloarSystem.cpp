@@ -44,7 +44,7 @@ void SolarSystem::Draw()
 void SolarSystem::Update()
 {
 	for (int i = 0; i < NUM_PLANET; i++) {
-		planetArray[i]->Update;
+		planetArray[i]->Update();
 	}
 }
 

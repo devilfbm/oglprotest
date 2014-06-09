@@ -83,11 +83,8 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CollRect.h" />
     <ClInclude Include="math3d.h" />
-<<<<<<< HEAD
     <ClInclude Include="Player.h" />
-=======
     <ClInclude Include="Planet.h" />
->>>>>>> c62eb73411874a5b43b6758d80f233aa903094f3
     <ClInclude Include="sky.h" />
     <ClInclude Include="solarSystem.h" />
     <ClInclude Include="stdafx.h" />
@@ -98,11 +95,8 @@
     <ClCompile Include="CollRect.cpp" />
     <ClCompile Include="math3d.cpp" />
     <ClCompile Include="oglprotest.cpp" />
-<<<<<<< HEAD
     <ClCompile Include="Player.cpp" />
-=======
     <ClCompile Include="Planet.cpp" />
->>>>>>> c62eb73411874a5b43b6758d80f233aa903094f3
     <ClCompile Include="sky.cpp" />
     <ClCompile Include="sloarSystem.cpp" />
     <ClCompile Include="stdafx.cpp">
