@@ -38,7 +38,7 @@
 
 #include "math3d.h"
 #include "sky.h"
-
+#include "Camera.h"
 //绘制轨道参数
 const int n = 1000; /* 轨道分段数 */
 const GLfloat R = 0.5f;
@@ -84,6 +84,8 @@ bool DisplayText = true; /* 是否显示标题 */
 #define LIST_COUNT 8
 static unsigned int* pList = new unsigned int[LIST_COUNT];
 
+static Camera *camera = new Camera();
+static Sky *sky = new Sky();
 //初始化显示列表数组
 void GenList()
 {
@@ -227,29 +229,35 @@ void Key(int Key, int LocationX, int LocationY)
 	switch (Key)
 	{
 		case GLUT_KEY_LEFT:
+			camera->TurnLeft();
 			HorizonAngle -= 5.0f;
 			lx = sin(HorizonAngle*3.14 / 180);
 			lz = -cos(HorizonAngle*3.14 / 180);
 			break;
 		case GLUT_KEY_RIGHT:
+			camera->TurnRight();
 			HorizonAngle += 5.0f;
 			lx = sin(HorizonAngle*3.14 / 180);
 			lz = -cos(HorizonAngle*3.14 / 180);
 			break;
 		case GLUT_KEY_UP:
+			camera->Push();
 			DepthDistance = 0.1f;
 			x += DepthDistance*lx;
 			z += DepthDistance*lz;
 			break;
 		case GLUT_KEY_DOWN:
+			camera->Pull();
 			DepthDistance = -0.1f;
 			x += DepthDistance*lx;
 			z += DepthDistance*lz;
 			break;
 		case GLUT_KEY_PAGE_DOWN:
+			camera->TurnDown();
 			ly -= 0.1f;
 			break;
 		case GLUT_KEY_PAGE_UP:
+			camera->TurnUp();
 			ly += 0.1f;
 	}
 	glutPostRedisplay();
@@ -261,11 +269,14 @@ void RenderScene(void)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
 	glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	gluLookAt(x, y, z,
-		x + lx, y + ly, z + lz,
-		0, 1.0f, 0);
+	//glMatrixMode(GL_MODELVIEW);
+	//glLoadIdentity();
+	//gluLookAt(x, y, z,
+	//	x + lx, y + ly, z + lz,
+	//	0, 1.0f, 0);
+
+	camera->Setup();
+	camera->LookAt();
 
 	//开启光照
 	glEnable(GL_LIGHTING);
@@ -450,7 +461,6 @@ void RenderScene(void)
 
 	glCallLists(8, GL_UNSIGNED_INT, pList);
 
-	Sky *sky = new Sky();
 	sky->InitSky(0.0f, 0.0f, 0.0f, 20.0f, StarMap[9]);
 	sky->ShowSky();
 
@@ -524,6 +534,7 @@ void MyInit()
 	LoadTex(filename, StarMap[8]);
 	filename = _T("skybackground.bmp");
 	LoadTex(filename, StarMap[9]);
+
 }
 
 // Called by GLUT library when idle (window not being resized or moved)
@@ -586,6 +597,7 @@ void Reshape(GLsizei w, GLsizei h)
 //主函数
 int main(int argc, char* argv[])
 {
+
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(1366, 768);

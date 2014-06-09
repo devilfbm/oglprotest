@@ -36,6 +36,11 @@ public:
 	*/
 	void LookAt();
 
+	/* 返回摄像机坐标 */
+	GLdouble GetEyeX();
+	GLdouble GetEyeY();
+	GLdouble GetEyeZ();
+
 	/* 左右水平转动 */
 	void TurnLeft();
 	void TurnRight();

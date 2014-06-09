@@ -26,6 +26,21 @@ void Camera::LookAt()
 		CenterX, CenterY, CenterZ,
 		UpX, UpY, UpZ);
 }
+
+/* 返回摄像机坐标 */
+GLdouble Camera::GetEyeX()
+{
+	return EyeX;
+}
+GLdouble Camera::GetEyeY()
+{
+	return EyeY;
+}
+GLdouble Camera::GetEyeZ()
+{
+	return EyeZ;
+}
+
 /* 左右水平转动 */
 void Camera::TurnLeft()
 {
