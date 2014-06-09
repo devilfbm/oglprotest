@@ -7,14 +7,13 @@ class Planet
 {
 public:
 	Planet();
-	Planet(GLuint texid, GLfloat ox, GLfloat oy, GLfloat oz, GLfloat rd, GLfloat r, GLfloat g, GLfloat b, GLfloat rs);
+	Planet(GLuint texid, GLfloat ox, GLfloat oy, GLfloat oz, GLfloat rd, GLfloat r, GLfloat g, GLfloat b, GLfloat rs, char* name);
 	~Planet();
 	void Draw();
 	void Update();
 	bool Crash(GLfloat x, GLfloat y, GLfloat z, GLfloat r);
 	void setRoadActive(bool active);
 	void setTextActive(bool active);
-	void setPlanetName(char *name);
 private:
 	GLUquadricObj *quadricObj;
 	char* planetName;

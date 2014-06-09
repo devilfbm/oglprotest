@@ -10,14 +10,14 @@ class SolarSystem
 {
 public:
 	SolarSystem();
-	SolarSystem(bool roadActive, bool textActive, GLuint* texArray);
+	SolarSystem(GLuint* texArray);
 	void Init();
 	void Draw();
 	void Update();
 	bool Crash(GLfloat x, GLfloat y, GLfloat z, GLfloat r);
+	void setRoadActive(bool active);
+	void setTextActive(bool active);
 private:
-	bool roadActive;
-	bool textActive;
 	GLuint *textureArray;
 	Planet *planetArray[NUM_PLANET];
 };

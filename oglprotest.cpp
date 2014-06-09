@@ -41,14 +41,7 @@
 #include "Camera.h"
 #include "CollRect.h"
 #include "Player.h"
-//绘制轨道参数
-const int n = 1000; /* 轨道分段数 */
-const GLfloat R = 0.5f;
-const GLfloat Pi = 3.1415926536f;
-
-//旋转速度
-static GLfloat angle = 0.0f;
-static GLfloat StarRollSpeed[9] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
+#include "solarSystem.h"
 
 //3D漫游参数
 GLfloat x = 0.0f, y = 1.0f, z = 8.0f; /* 摄像机初始坐标 */
@@ -82,21 +75,12 @@ bool RoadActive = true; /* 是否显示轨道 */
 bool RollActive = true; /* 是否公转 */
 bool DisplayText = true; /* 是否显示标题 */
 
-//显示列表
-#define LIST_COUNT 8
-static unsigned int* pList = new unsigned int[LIST_COUNT];
-
 static Camera *camera = new Camera();
 static Sky *sky = new Sky();
 static CollRect *collrect = new CollRect();
 static Player *player = new Player(camera, collrect);
 
-//初始化显示列表数组
-void GenList()
-{
-	for (int i = 1; i <= LIST_COUNT; i++)
-		pList[i - 1] = i;
-}
+SolarSystem *solarSystem;
 
 //添加菜单
 void menuHandler(int value)
@@ -108,10 +92,12 @@ void menuHandler(int value)
 	else if (value == 2)
 	{
 		DisplayText = !DisplayText;
+		solarSystem->setTextActive(DisplayText);
 	}
 	else if(value == 3)
 	{
 		RoadActive = !RoadActive;
+		solarSystem->setRoadActive(RoadActive);
 	}
 	glutPostRedisplay();
 }
@@ -144,88 +130,6 @@ bool LoadTex(LPCWSTR filename, GLuint &texture)
 	}
 	free(pImage);
 	return true;
-}
-
-//绘制地面
-void DrawGround()
-{
-	glBegin(GL_QUADS);
-	glColor3f(.15f, 0.15f, .15f);
-	glVertex3f(-100.0f, -0.8f, 100.0f);
-	glVertex3f(100.0f, -0.8f, 100.0f);
-	glColor3f(.5f, .5f, .5f);
-	glVertex3f(100.0f, -0.8f, -100.0f);
-	glVertex3f(-100.0f, -0.8f, -100.0f);
-	glEnd();
-}
-
-//绘制地面网格线
-void DrawGroundLine()
-{
-	GLfloat fExtent = 100.0f;
-	GLfloat fStep = 1.0f;
-	GLfloat y = -0.8f;
-	GLint iLine;
-
-	glBegin(GL_LINES);
-	for (iLine = -fExtent; iLine <= fExtent; iLine += fStep)
-	{
-		glVertex3f(iLine, y, fExtent);
-		glVertex3f(iLine, y, -fExtent);
-
-		glVertex3f(fExtent, y, iLine);
-		glVertex3f(-fExtent, y, iLine);
-	}
-	glEnd();
-}
-
-//绘制文字
-void DrawTitle(char *string, GLdouble x, GLdouble y, GLdouble z, GLdouble r, GLfloat rot)
-{
-	if (DisplayText)
-	{
-		glRotatef(rot, 0.0f, r, 0.0f);
-		if (string != NULL)
-		{
-			int len = (int)strlen(string);
-			glRasterPos3f(x - len / 50.0f, y + 0.3, z);
-			for (int i = 0; i < len; i++)
-			{
-				glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, string[i]);
-			}
-		}
-	}
-}
-
-//绘制普通星体
-void DrawBall(GLdouble Radius, int n)
-{
-	glPushMatrix();
-	glBindTexture(GL_TEXTURE_2D, StarMap[n]);
-	gluSphere(QuadricObj, Radius, 32, 32);  
-	gluQuadricTexture(QuadricObj, GLU_TRUE); 
-	gluQuadricDrawStyle(QuadricObj, GLU_FILL);  
-	glPopMatrix();
-}
-
-//绘制轨道
-void DrawRoad(GLdouble Radius)
-{
-	if (RoadActive)
-	{
-		glLineWidth(1.2);
-		glBegin(GL_LINE_LOOP);
-		for (int i = 0; i < n; i++)
-			glVertex3f(Radius * cos(2 * Pi / n * i), -0.05f, Radius * sin(2 * Pi / n * i));
-		glEnd();
-	}
-}
-
-//绘制带环星体
-void DrawTorusBall()
-{
-	glutSolidTorus(.02f, 0.35f, 30, 30);
-	glutSolidSphere(0.22f, 30, 30);
 }
 
 //处理键盘消息，后两个参数不使用
@@ -275,10 +179,6 @@ void RenderScene(void)
 	glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
 	glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
 	glMatrixMode(GL_MODELVIEW);
-	/*glLoadIdentity();
-	gluLookAt(x, y, z,
-		x + lx, y + ly, z + lz,
-		0, 1.0f, 0);*/
 
 	player->Update();
 
@@ -287,183 +187,7 @@ void RenderScene(void)
 	glLightfv(GL_LIGHT0, GL_POSITION, LightPos);
 	glLightfv(GL_LIGHT1, GL_POSITION, LightPos);
 
-	glGenLists(LIST_COUNT);
-
-	//太阳 水星
-	glNewList(pList[0], GL_COMPILE);
-
-	glPushMatrix();
-	glColor3f(0.5f, 0.0f, 0.0f);
-	glRotatef(angle, 0.0f, 1.0f, 0.0f);
-	glutSolidTorus(.15f, 0.4f, 30, 30);
-	glRotatef(-angle, 0.0f, 1.0f, 0.0f);
-
-	glRotatef(StarRollSpeed[1], 0.0f, 1.0f, 0.0f);
-	glColor3f(0.7f, 0.7f, 0.4f);
-	glTranslatef(0.0f, 0.0f, 2.0f);
-	glEnable(GL_TEXTURE_2D);
-	DrawBall(0.2f, 1);
-	glDisable(GL_TEXTURE_2D);
-	glPopMatrix();
-
-	glPushMatrix();
-	DrawTitle("Sun", .0f, .5f, .0f, .0f, .0f);
-	glPopMatrix();
-
-	glPushMatrix();
-	DrawTitle("Mercury", .0f, 0.2f, 2.0f, 0.4f, StarRollSpeed[1]);
-	glPopMatrix();
-
-	DrawRoad(2);
-
-	glEndList();
-
-	//金星
-	glNewList(pList[1], GL_COMPILE);
-
-	glPushMatrix();
-
-	glRotatef(StarRollSpeed[2], 0.0f, 1.0f, 0.0f);
-	glColor3f(0.9f, 0.6f, 0.6f);
-	glTranslatef(5.0f, 0.0, 0.0f);
-	glEnable(GL_TEXTURE_2D);
-	DrawBall(0.3f, 2);
-	glDisable(GL_TEXTURE_2D);
-
-	glPopMatrix();
-
-	glPushMatrix();
-	DrawTitle("Venus", 5.0f, 0.3f, 0.0f, 0.77f, StarRollSpeed[2]);
-	glPopMatrix();
-
-	DrawRoad(5);
-	glEndList();
-
-	//地球
-	glNewList(pList[2], GL_COMPILE);
-	glPushMatrix();
-
-	glRotatef(StarRollSpeed[3], 0.0f, 1.0f, 0.0f);
-	glColor3f(1.0f, 1.0f, 1.0f);
-	glTranslatef(-5.0, 0.0, 3.0f);
-	glEnable(GL_TEXTURE_2D);
-	DrawBall(0.3f, 3);
-	glDisable(GL_TEXTURE_2D);
-
-	glPopMatrix();
-
-	glPushMatrix();
-	DrawTitle("Earth", -5.0, 0.3f, 3.0f, 0.8f, StarRollSpeed[3]);
-	glPopMatrix();
-
-	DrawRoad((GLdouble)sqrt((double)34));
-	glEndList();
-
-	//火星
-	glNewList(pList[3], GL_COMPILE);
-	glPushMatrix();
-
-	glRotatef(StarRollSpeed[4], 0.0f, 1.0f, 0.0f);
-	glColor3f(0.7f, 0.3f, 0.2f);
-	glTranslatef(-6.0, .2f, -4.0f);
-	glEnable(GL_TEXTURE_2D);
-	DrawBall(0.32f, 4);
-	glDisable(GL_TEXTURE_2D);
-
-	glPopMatrix();
-
-	glPushMatrix();
-	DrawTitle("Mars", -6.0, 0.52f, -4.0f, 0.75f, StarRollSpeed[4]);
-	glPopMatrix();
-
-	glPushMatrix();
-	glTranslatef(.0, .2f, .0f);
-	DrawRoad((GLdouble)sqrt((double)(36 + 16)));
-	glPopMatrix();
-	glEndList();
-
-	//木星
-	glNewList(pList[4], GL_COMPILE);
-	glPushMatrix();
-
-	glRotatef(StarRollSpeed[5], 0.0f, 1.0f, 0.0f);
-	glColor3f(1.0f, 1.0f, 1.0f);
-	glTranslatef(6.0, .1f, 5.0f);
-	glEnable(GL_TEXTURE_2D);
-	DrawBall(0.34f, 5);
-	glDisable(GL_TEXTURE_2D);
-
-	glPopMatrix();
-
-	glPushMatrix();
-	DrawTitle("Jupiter", 6.0, .44f, 5.0f, 0.6f, StarRollSpeed[5]);
-	glPopMatrix();
-
-	glPushMatrix();
-	glTranslatef(.0, .1f, .0f);
-	DrawRoad((GLdouble)sqrt((double)(36 + 25)));
-	glPopMatrix();
-	glEndList();
-
-	//土星
-	glNewList(pList[5], GL_COMPILE);
-	glPushMatrix();
-
-	glRotatef(StarRollSpeed[6], 0.0f, 1.0f, 0.0f);
-	glColor3f(0.7f, 0.6f, 0.3f);
-	glTranslatef(7.0, .0f, -6.0f);
-	DrawTorusBall();
-
-	glPopMatrix();
-
-	glPushMatrix();
-	DrawTitle("Saturn", 7.0, .5f, -6.0f, 0.6f, StarRollSpeed[6]);
-	glPopMatrix();
-
-	DrawRoad((GLdouble)sqrt((double)(49 + 36)));
-	glEndList();
-
-	//天王星
-	glNewList(pList[6], GL_COMPILE);
-	glPushMatrix();
-
-	glRotatef(StarRollSpeed[7], 0.0f, 1.0f, 0.0f);
-	glColor3f(0.5f, 0.5f, 0.5f);
-	glTranslatef(-9.0, .0f, 8.0f);
-	glEnable(GL_TEXTURE_2D);
-	DrawBall(.5f, 7);
-	glDisable(GL_TEXTURE_2D);
-
-	glPopMatrix();
-
-	glPushMatrix();
-	DrawTitle("Uranus", -9.0, .5f, 8.0f, 0.2f, StarRollSpeed[7]);
-	glPopMatrix();
-
-	DrawRoad((GLdouble)sqrt((double)(81 + 64)));
-	glEndList();
-
-	//海王星
-	glNewList(pList[7], GL_COMPILE);
-	glPushMatrix();
-
-	glRotatef(StarRollSpeed[8], 0.0f, 1.0f, 0.0f);
-	glColor3f(0.5f, 0.8f, 0.5f);
-	glTranslatef(-10.0, .0f, -10.0f);
-	glEnable(GL_TEXTURE_2D);
-	DrawBall(.5f, 8);
-	glDisable(GL_TEXTURE_2D);
-
-	glPopMatrix();
-
-	glPushMatrix();
-	DrawTitle("Neptune", -10.0, .5f, -10.0f, 0.3f, StarRollSpeed[8]);
-	glPopMatrix();
-
-	DrawRoad((GLdouble)sqrt((double)(200)));
-	glEndList();
-
-	glCallLists(8, GL_UNSIGNED_INT, pList);
+	solarSystem->Draw();
 
 	sky->InitSky(0.0f, 0.0f, 0.0f, 20.0f, StarMap[9]);
 	sky->ShowSky();
@@ -539,44 +263,23 @@ void MyInit()
 	filename = _T("skybackground.bmp");
 	LoadTex(filename, StarMap[9]);
 
+	solarSystem = new SolarSystem(StarMap);
+	solarSystem->Init();
 }
 
 // Called by GLUT library when idle (window not being resized or moved)
 void TimerFunction(int value)
 {
-	//重绘场景
-	angle += 3.0f;
-	if (angle >= 360.0f)
-	{
-		angle -= 360.0;
-	}
-
 	//行星运行速度
 	if (RollActive)
 	{
-		StarRollSpeed[1] += 4.8f;
-		StarRollSpeed[2] += 3.5f;
-		StarRollSpeed[3] += 3.0f;
-		StarRollSpeed[4] += 2.4f;
-		StarRollSpeed[5] += 1.3f;
-		StarRollSpeed[6] += 0.94f;
-		StarRollSpeed[7] += 0.68f;
-		StarRollSpeed[8] += 0.54f;
-	}
-
-	for (int i = 1; i <= 8; i++)
-	{
-		if (StarRollSpeed[i] >= 360)
-		{
-			StarRollSpeed[i] -= 360;
-		}
+		solarSystem->Update();
 	}
 
 	glutPostRedisplay();
 	glutTimerFunc(60, TimerFunction, 1);
 }
 
-//
 void Reshape(GLsizei w, GLsizei h)
 {
 	GLfloat fAspect;
@@ -607,7 +310,6 @@ int main(int argc, char* argv[])
 	glutInitWindowSize(1366, 768);
 	glutCreateWindow("Graphic Project 2: Star Show");
 	MyInit();
-	GenList();
 	glutReshapeFunc(Reshape);
 	glutDisplayFunc(RenderScene);
 

@@ -19,10 +19,10 @@ Planet::Planet()
 	rollSpeed = 0.0f; speed = 0.0f;
 	roadActive = true; textActive = true;
 	roadRadius = 0.0f;
-	planetName = "Haha";
+	planetName = "planet";
 }
 
-Planet::Planet(GLuint texid, GLfloat ox, GLfloat oy, GLfloat oz, GLfloat rd, GLfloat r, GLfloat g, GLfloat b, GLfloat rs)
+Planet::Planet(GLuint texid, GLfloat ox, GLfloat oy, GLfloat oz, GLfloat rd, GLfloat r, GLfloat g, GLfloat b, GLfloat rs, char* name)
 {
 	quadricObj = gluNewQuadric();
 	textureID = texid;
@@ -32,13 +32,13 @@ Planet::Planet(GLuint texid, GLfloat ox, GLfloat oy, GLfloat oz, GLfloat rd, GLf
 	speed = 0.0f;
 	roadActive = true; textActive = true;
 	roadRadius = sqrt(pow(ox, 2) + pow(oy, 2) + pow(oz, 2));
-	planetName = "Haha";
+	planetName = name;
 }
 
 void Planet::Draw()
 {
 	glPushMatrix();
-	glRotatef(rollSpeed, 0.0f, 1.0f, 0.0f);
+	glRotatef(speed, 0.0f, 1.0f, 0.0f);
 	glColor3f(red, green, blue);
 	glTranslatef(origin_x, origin_y, origin_z);
 	glEnable(GL_TEXTURE_2D);
@@ -46,12 +46,12 @@ void Planet::Draw()
 	glDisable(GL_TEXTURE_2D);
 
 	DrawRoad(roadRadius);
-	DrawTitle(planetName, origin_x, origin_y + 0.5, origin_z, rollSpeed);
+	DrawTitle(planetName, origin_x, origin_y + 0.3, origin_z, speed);
 }
 
 void Planet::Update()
 {
-	speed += rollSpeed;
+	speed += rollSpeed/10;
 	if (speed > 360.0) speed -= 360.0;
 }
 
@@ -63,11 +63,6 @@ void Planet::setRoadActive(bool active)
 void Planet::setTextActive(bool active)
 {
 	textActive = active;
-}
-
-void Planet::setPlanetName(char *name)
-{
-	planetName = name;
 }
 
 // ªÊ÷∆«ÚÃÂ
