@@ -81,6 +81,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="math3d.h" />
+    <ClInclude Include="Planet.h" />
     <ClInclude Include="sky.h" />
     <ClInclude Include="solarSystem.h" />
     <ClInclude Include="stdafx.h" />
@@ -89,6 +90,7 @@
   <ItemGroup>
     <ClCompile Include="math3d.cpp" />
     <ClCompile Include="oglprotest.cpp" />
+    <ClCompile Include="Planet.cpp" />
     <ClCompile Include="sky.cpp" />
     <ClCompile Include="sloarSystem.cpp" />
     <ClCompile Include="stdafx.cpp">

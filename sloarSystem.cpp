@@ -14,224 +14,36 @@ SolarSystem::SolarSystem()
 	textActive = true;
 }
 
-SolarSystem::SolarSystem(bool ra , bool ta)
+SolarSystem::SolarSystem(bool ra , bool ta, GLuint* texArray)
 {
-	quadricObj = gluNewQuadric();
 	roadActive = ra;
 	textActive = ta;
+	textureArray = texArray;
 }
 
-// 绘制太阳
-void SolarSystem::DrawSun(GLfloat rollSpeed, GLuint texture)
+void SolarSystem::Init()
 {
-	glPushMatrix();
-	glColor3f(0.5f, 0.0f, 0.0f);
-	glRotatef(rollSpeed, 0.0f, 1.0f, 0.0f);
-	glutSolidTorus(.15f, 0.4f, 30, 30);
-	glRotatef(-rollSpeed, 0.0f, 1.0f, 0.0f);
-	glPopMatrix();
-
-	glPushMatrix();
-	DrawTitle("Sun", .0f, .5, .0f, .0f, .0f);
-	glPopMatrix();
+	planetArray[0] = new Planet(100, 0.0f, 0.0f, 0.0f, .15f, 0.5f, 0.0f, 0.0f, 3.0f);
+	planetArray[1] = new Planet(textureArray[1], 0.0f, 0.0f, 2.0f, 0.2f, 0.7f, 0.7f, 0.4f, 4.8f);
+	planetArray[2] = new Planet(textureArray[2], 5.0f, 0.0f, 0.0f, 0.3f, 0.9f, 0.6f, 0.6f, 3.5f);
+	planetArray[3] = new Planet(textureArray[3], -5.0f, 0.0f, 3.0f, 0.3f, 1.0f, 1.0f, 1.0f, 3.0f);
+	planetArray[4] = new Planet(textureArray[4], -6.0f, .2f, -4.0f, 0.32f, 0.7f, 0.3f, 0.2f, 2.4f);
+	planetArray[5] = new Planet(textureArray[5], 6.0f, .1f, 5.0f, 0.34f, 1.0f, 1.0f, 1.0f, 1.3f);
+	planetArray[6] = new Planet(textureArray[6], 7.0f, 0.0f, -6.0f, 0.22f, 0.7f, 0.6f, 0.3f, 0.94f);
+	planetArray[7] = new Planet(textureArray[7], -9.0f, 0.0f, 8.0f, 0.5f, 0.5f, 0.5f, 0.5f, 0.68f);
+	planetArray[8] = new Planet(textureArray[7], -10.0f, 0.0f, -10.0f, 0.5f, 0.5f, 0.8f, 0.5f, 0.54f);
 }
 
-// 绘制水星
-void SolarSystem::DrawMercury(GLfloat rollSpeed, GLuint texture)
+void SolarSystem::Draw()
 {
-	glPushMatrix();
-	glRotatef(rollSpeed, 0.0f, 1.0f, 0.0f);
-	glColor3f(0.7f, 0.7f, 0.4f);
-	glTranslatef(0.0f, 0.0f, 2.0f);
-	glEnable(GL_TEXTURE_2D);
-	DrawBall(0.2f, 1);
-	glDisable(GL_TEXTURE_2D);
-	glPopMatrix();
-
-	glPushMatrix();
-	DrawTitle("Mercury", .0f, 0.2f, 2.0f, 0.4f, rollSpeed);
-	glPopMatrix();
-	
-	DrawRoad(2);
-}
-
-// 绘制金星
-void SolarSystem::DrawVenus(GLfloat rollSpeed, GLuint texture)
-{
-	glPushMatrix();
-	glRotatef(rollSpeed, 0.0f, 1.0f, 0.0f);
-	glColor3f(0.9f, 0.6f, 0.6f);
-	glTranslatef(5.0f, 0.0f, 0.0f);
-	glEnable(GL_TEXTURE_2D);
-	DrawBall(0.3f, texture);
-	glDisable(GL_TEXTURE_2D);
-	glPopMatrix();
-
-	glPushMatrix();
-	DrawTitle("Venus", 5.0f, 0.3f, 0.0f, 0.77f, rollSpeed);
-	glPopMatrix();
-
-	DrawRoad(5);
-}
-
-// 绘制地球
-void SolarSystem::DrawEarth(GLfloat rollSpeed, GLuint texture)
-{
-	glPushMatrix();
-	glRotatef(rollSpeed, 0.0f, 1.0f, 0.0f);
-	glColor3f(1.0f, 1.0f, 1.0f);
-	glTranslatef(-5.0f, 0.0, 3.0f);
-	glEnable(GL_TEXTURE_2D);
-	DrawBall(0.3f, texture);
-	glDisable(GL_TEXTURE_2D);
-	glPopMatrix();
-
-	glPushMatrix();
-	DrawTitle("Earth", -5.0f, 0.3f, 3.0f, 0.8f, rollSpeed);
-	glPopMatrix();
-
-	DrawRoad((GLdouble)sqrt((double)34));
-}
-
-// 绘制火星
-void SolarSystem::DrawMars(GLfloat rollSpeed, GLuint texture)
-{
-	glPushMatrix();
-	glRotatef(rollSpeed, 0.0f, 1.0f, 0.0f);
-	glColor3f(0.7f, 0.3f, 0.2f);
-	glTranslatef(-6.0f, .2f, -4.0f);
-	glEnable(GL_TEXTURE_2D);
-	DrawBall(0.32f, texture);
-	glDisable(GL_TEXTURE_2D);
-	glPopMatrix();
-
-	glPushMatrix();
-	DrawTitle("Mars", -6.0f, 0.52f, -4.0f, 0.75f, rollSpeed);
-	glPopMatrix();
-
-	glPushMatrix();
-	glTranslatef(.0, .2f, .0f);
-	DrawRoad((GLdouble)sqrt((double)(36 + 16)));
-	glPopMatrix();
-}
-
-// 绘制木星
-void SolarSystem::DrawJupiter(GLfloat rollSpeed, GLuint texture)
-{
-	glPushMatrix();
-	glRotatef(rollSpeed, 0.0f, 1.0f, 0.0f);
-	glColor3f(1.0f, 1.0f, 1.0f);
-	glTranslatef(6.0f, .1f, 5.0f);
-	glEnable(GL_TEXTURE_2D);
-	DrawBall(0.34f, texture);
-	glDisable(GL_TEXTURE_2D);
-	glPopMatrix();
-
-	glPushMatrix();
-	glTranslatef(.0f, .1f, .0f);
-	DrawRoad((GLdouble)sqrt((double)(36 + 25)));
-	glPopMatrix();
-}
-
-// 绘制土星
-void SolarSystem::DrawSaturn(GLfloat rollSpeed, GLuint texture)
-{
-	glPushMatrix();
-	glRotatef(rollSpeed, 0.0f, 1.0f, .0f);
-	glColor3f(0.7f, 0.6f, 0.3f);
-	glTranslatef(7.0, .0f, -6.0f);
-	DrawTorusBall();
-	glPopMatrix();
-
-	glPushMatrix();
-	DrawTitle("Saturn", 7.0f, .5f, -6.0f, 0.6f, rollSpeed);
-	glPopMatrix();
-
-	DrawRoad((GLdouble)sqrt((double)(49 + 36)));
-}
-
-// 绘制天王星
-void SolarSystem::DrawUranus(GLfloat rollSpeed, GLuint texture)
-{
-	glPushMatrix();
-	glRotatef(rollSpeed, 0.0f, 1.0f, 0.0f);
-	glColor3f(0.5f, 0.5f, 0.5f);
-	glTranslatef(-9.0f, .0f, 8.0f);
-	glEnable(GL_TEXTURE_2D);
-	DrawBall(.5f, texture);
-	glDisable(GL_TEXTURE_2D);
-	glPopMatrix();
-
-	glPushMatrix();
-	DrawTitle("Uranus", -9.0f, .5f, 8.0f, 0.2f, rollSpeed);
-	glPopMatrix();
-
-	DrawRoad((GLdouble)sqrt((double)(81 + 64)));
-}
-
-// 绘制海王星
-void SolarSystem::DrawNeptune(GLfloat rollSpeed, GLuint texture)
-{
-	glPushMatrix();
-	glRotatef(rollSpeed, 0.0f, 1.0f, 0.0f);
-	glColor3f(0.5f, 0.8f, 0.5f);
-	glTranslatef(-10.0f, 0.0f, -10.0f);
-	glEnable(GL_TEXTURE_2D);
-	DrawBall(.5f, texture);
-	glDisable(GL_TEXTURE_2D);
-	glPopMatrix();
-
-	glPushMatrix();
-	DrawTitle("Neptune", -10.0f, .5f, -10.0f, 0.3f, rollSpeed);
-	glPopMatrix();
-
-	DrawRoad((GLdouble)sqrt((double)(200)));
-}
-
-// 绘制球体
-void SolarSystem::DrawBall(GLdouble Radius, unsigned int texture)
-{
-	glPushMatrix();
-	glBindTexture(GL_TEXTURE_2D, texture);
-	gluSphere(quadricObj, Radius, 32, 32);
-	gluQuadricTexture(quadricObj, GLU_TRUE);
-	gluQuadricDrawStyle(quadricObj, GLU_FILL);
-	glPopMatrix();
-}
-
-// 绘制带环星球
-void SolarSystem::DrawTorusBall()
-{
-	glutSolidTorus(.02f, 0.35f, 30., 30.);
-	glutSolidSphere(0.22f, 30, 30);
-}
-
-// 绘制轨道
-void SolarSystem::DrawRoad(GLdouble Radius)
-{
-	if (roadActive)
-	{
-		glLineWidth(1.2);
-		glBegin(GL_LINE_LOOP);
-		for (int i = 0; i < n; i++)
-			glVertex3f(Radius * cos(2 * Pi / n * i), -0.05f, Radius * sin(2 * Pi / n * i));
+	for (int i = 1; i < NUM_PLANET; i++) {
+		planetArray[i]->Draw();
 	}
 }
 
-// 绘制文字
-void SolarSystem::DrawTitle(char *string, GLdouble x, GLdouble y, GLdouble z, GLdouble r, GLfloat rot)
+void SolarSystem::Update()
 {
-	if (textActive)
-	{
-		glRotatef(rot, 0.0f, r, 0.0f);
-		if (string != NULL)
-		{
-			int len = (int)strlen(string);
-			glRasterPos3f(x - len / 50.0f, y + 0.3, z);
-			for (int i = 0; i < len; i++)
-			{
-				glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, string[i]);
-			}
-		}
+	for (int i = 0; i < NUM_PLANET; i++) {
+		planetArray[i]->Update;
 	}
 }
