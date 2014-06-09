@@ -49,7 +49,7 @@ static GLfloat angle = 0.0f;
 static GLfloat StarRollSpeed[9] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
 
 //3D漫游参数
-GLfloat x = 0.0f, y = 0.0f, z = 5.0f; /* 摄像机初始坐标 */
+GLfloat x = 0.0f, y = 1.0f, z = 8.0f; /* 摄像机初始坐标 */
 GLfloat lx = 0.0f, ly = 0.0f, lz = -1.0f;
 
 static GLfloat HorizonAngle = 0.0f;
@@ -261,6 +261,7 @@ void RenderScene(void)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
 	glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
+	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	gluLookAt(x, y, z,
 		x + lx, y + ly, z + lz,
