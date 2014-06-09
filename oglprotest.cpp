@@ -280,7 +280,7 @@ void RenderScene(void)
 		x + lx, y + ly, z + lz,
 		0, 1.0f, 0);*/
 
-	player->Init();
+	player->Update();
 
 	//ПЊЦєЙтее
 	glEnable(GL_LIGHTING);

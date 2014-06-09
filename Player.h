@@ -31,7 +31,7 @@ public:
 	~Player();
 	CollRect *GetColl();
 
-	void Init();
+	void Update();
 	/* 左右水平转动 */
 	void TurnLeft();
 	void TurnRight();

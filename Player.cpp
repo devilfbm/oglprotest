@@ -14,7 +14,7 @@ Player::Player(Camera *cam, CollRect *Coll)
 	collrect->Set(camera->GetEyeX(), camera->GetEyeY(), camera->GetEyeZ(), 1.0f, 1.0f, 1.0f);
 }
 
-void Player::Init()
+void Player::Update()
 {
 	camera->Setup();
 	camera->LookAt();
