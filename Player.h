@@ -31,6 +31,19 @@ public:
 	~Player();
 	CollRect *GetColl();
 
+	void Init();
+	/* 左右水平转动 */
+	void TurnLeft();
+	void TurnRight();
+	/* 上下垂直转动 */
+	void TurnUp();
+	void TurnDown();
+	/* 左右摇动 */
+	void RollLeft();
+	void RollRight();
+	/* 前后推拉 */
+	void Pull();
+	void Push();
 private:
 	Camera *camera;
 	CollRect *collrect;

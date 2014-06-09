@@ -23,7 +23,7 @@ void Camera::Setup()
 void Camera::LookAt()
 {
 	gluLookAt(EyeX, EyeY, EyeZ, /* ÉãÏñ»ú³õÊ¼×ø±ê */
-		CenterX, CenterY, CenterZ,
+		EyeX + CenterX, EyeY + CenterY, EyeZ + CenterZ,
 		UpX, UpY, UpZ);
 }
 

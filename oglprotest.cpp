@@ -234,35 +234,35 @@ void Key(int Key, int LocationX, int LocationY)
 	switch (Key)
 	{
 		case GLUT_KEY_LEFT:
-			camera->TurnLeft();
+			player->TurnLeft();
 			HorizonAngle -= 5.0f;
 			lx = sin(HorizonAngle*3.14 / 180);
 			lz = -cos(HorizonAngle*3.14 / 180);
 			break;
 		case GLUT_KEY_RIGHT:
-			camera->TurnRight();
+			player->TurnRight();
 			HorizonAngle += 5.0f;
 			lx = sin(HorizonAngle*3.14 / 180);
 			lz = -cos(HorizonAngle*3.14 / 180);
 			break;
 		case GLUT_KEY_UP:
-			camera->Push();
+			player->Push();
 			DepthDistance = 0.1f;
 			x += DepthDistance*lx;
 			z += DepthDistance*lz;
 			break;
 		case GLUT_KEY_DOWN:
-			camera->Pull();
+			player->Pull();
 			DepthDistance = -0.1f;
 			x += DepthDistance*lx;
 			z += DepthDistance*lz;
 			break;
 		case GLUT_KEY_PAGE_DOWN:
-			camera->TurnDown();
+			player->TurnDown();
 			ly -= 0.1f;
 			break;
 		case GLUT_KEY_PAGE_UP:
-			camera->TurnUp();
+			player->TurnUp();
 			ly += 0.1f;
 	}
 	glutPostRedisplay();
@@ -274,14 +274,13 @@ void RenderScene(void)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
 	glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
-	//glMatrixMode(GL_MODELVIEW);
-	//glLoadIdentity();
-	//gluLookAt(x, y, z,
-	//	x + lx, y + ly, z + lz,
-	//	0, 1.0f, 0);
+	glMatrixMode(GL_MODELVIEW);
+	/*glLoadIdentity();
+	gluLookAt(x, y, z,
+		x + lx, y + ly, z + lz,
+		0, 1.0f, 0);*/
 
-	camera->Setup();
-	camera->LookAt();
+	player->Init();
 
 	//ПЊЦєЙтее
 	glEnable(GL_LIGHTING);
