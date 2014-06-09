@@ -30,6 +30,12 @@
     <ClInclude Include="sky.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="solarSystem.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Planet.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -42,6 +48,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="sky.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sloarSystem.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Planet.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
