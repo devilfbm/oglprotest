@@ -39,6 +39,8 @@
 #include "math3d.h"
 #include "sky.h"
 #include "Camera.h"
+#include "CollRect.h"
+#include "Player.h"
 //绘制轨道参数
 const int n = 1000; /* 轨道分段数 */
 const GLfloat R = 0.5f;
@@ -86,6 +88,9 @@ static unsigned int* pList = new unsigned int[LIST_COUNT];
 
 static Camera *camera = new Camera();
 static Sky *sky = new Sky();
+static CollRect *collrect = new CollRect();
+static Player *player = new Player(camera, collrect);
+
 //初始化显示列表数组
 void GenList()
 {

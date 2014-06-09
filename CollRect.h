@@ -26,7 +26,7 @@ public:
 	CollRect();
 	~CollRect();
 	CollRect(GLdouble LocX, GLdouble LocY, GLdouble LocZ, GLdouble SizeX, GLdouble SizeY, GLdouble SizeZ);
-
+	void Set(GLdouble LocX, GLdouble LocY, GLdouble LocZ, GLdouble SizeX, GLdouble SizeY, GLdouble SizeZ);
 	/* зјБъ */
 	GLdouble x;
 	GLdouble y;

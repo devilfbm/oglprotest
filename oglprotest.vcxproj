@@ -81,15 +81,19 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CollRect.h" />
     <ClInclude Include="math3d.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="sky.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CollRect.cpp" />
     <ClCompile Include="math3d.cpp" />
     <ClCompile Include="oglprotest.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="sky.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
