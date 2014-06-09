@@ -30,6 +30,7 @@
     <ClInclude Include="sky.h">
       <Filter>头文件</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="Camera.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -37,6 +38,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
+=======
+    <ClInclude Include="solarSystem.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Planet.h">
+>>>>>>> c62eb73411874a5b43b6758d80f233aa903094f3
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -53,6 +60,7 @@
     <ClCompile Include="sky.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="Camera.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -60,6 +68,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
+=======
+    <ClCompile Include="sloarSystem.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Planet.cpp">
+>>>>>>> c62eb73411874a5b43b6758d80f233aa903094f3
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
