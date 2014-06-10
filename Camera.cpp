@@ -4,7 +4,7 @@
 
 Camera::Camera()
 {
-	EyeX = 0.0f, EyeY = 1.0f, EyeZ = 8.0f; /* 摄像机初始坐标 */
+	EyeX = 0.0f, EyeY = 0.4f, EyeZ = 8.0f; /* 摄像机初始坐标 */
 	CenterX = 0.0f, CenterY = 0.0f, CenterZ = 0.0f;
 	UpX = 0.0f, UpY = 1.0f, UpZ = 0.0f;
 

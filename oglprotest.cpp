@@ -43,13 +43,6 @@
 #include "Player.h"
 #include "solarSystem.h"
 
-//3D漫游参数
-GLfloat x = 0.0f, y = 1.0f, z = 8.0f; /* 摄像机初始坐标 */
-GLfloat lx = 0.0f, ly = 0.0f, lz = -1.0f;
-
-static GLfloat HorizonAngle = 0.0f;
-static GLfloat DepthDistance = 0.0f;
-
 //光照参数
 //W = 0.0f 无穷远光
 GLfloat LightPos[4] = { .0f, .0f, .0f, 1.0f };
@@ -72,7 +65,7 @@ GLUquadricObj *QuadricObj;
 
 //标志位
 bool RoadActive = true; /* 是否显示轨道 */ 
-bool RollActive = true; /* 是否公转 */
+bool RollActive = false; /* 是否公转 */
 bool DisplayText = true; /* 是否显示标题 */
 
 static Camera *camera = new Camera();
@@ -139,35 +132,45 @@ void Key(int Key, int LocationX, int LocationY)
 	{
 		case GLUT_KEY_LEFT:
 			player->TurnLeft();
-			HorizonAngle -= 5.0f;
-			lx = sin(HorizonAngle*3.14 / 180);
-			lz = -cos(HorizonAngle*3.14 / 180);
+			if (solarSystem->Crash(player->GetColl()->x, player->GetColl()->y, player->GetColl()->z, player->GetColl()->lx)){
+				player->TurnRight();
+				RollActive = false;
+			}
 			break;
 		case GLUT_KEY_RIGHT:
 			player->TurnRight();
-			HorizonAngle += 5.0f;
-			lx = sin(HorizonAngle*3.14 / 180);
-			lz = -cos(HorizonAngle*3.14 / 180);
+			if (solarSystem->Crash(player->GetColl()->x, player->GetColl()->y, player->GetColl()->z, player->GetColl()->lx)){
+				player->TurnLeft();
+				RollActive = false;
+			}
 			break;
 		case GLUT_KEY_UP:
 			player->Push();
-			DepthDistance = 0.1f;
-			x += DepthDistance*lx;
-			z += DepthDistance*lz;
+			if (solarSystem->Crash(player->GetColl()->x, player->GetColl()->y, player->GetColl()->z, player->GetColl()->lx)){
+				player->Pull();
+				RollActive = false;
+			}
 			break;
 		case GLUT_KEY_DOWN:
 			player->Pull();
-			DepthDistance = -0.1f;
-			x += DepthDistance*lx;
-			z += DepthDistance*lz;
+			if (solarSystem->Crash(player->GetColl()->x, player->GetColl()->y, player->GetColl()->z, player->GetColl()->lx)){
+				player->Push();
+				RollActive = false;
+			}
 			break;
 		case GLUT_KEY_PAGE_DOWN:
 			player->TurnDown();
-			ly -= 0.1f;
+			if (solarSystem->Crash(player->GetColl()->x, player->GetColl()->y, player->GetColl()->z, player->GetColl()->lx)){
+				player->TurnUp();
+				RollActive = false;
+			}
 			break;
 		case GLUT_KEY_PAGE_UP:
 			player->TurnUp();
-			ly += 0.1f;
+			if (solarSystem->Crash(player->GetColl()->x, player->GetColl()->y, player->GetColl()->z, player->GetColl()->lx)){
+				player->TurnDown();
+				RollActive = false;
+			}
 	}
 	glutPostRedisplay();
 }
@@ -263,6 +266,8 @@ void MyInit()
 	filename = _T("skybackground.bmp");
 	LoadTex(filename, StarMap[9]);
 
+
+
 	solarSystem = new SolarSystem(StarMap);
 	solarSystem->Init();
 }
@@ -271,6 +276,9 @@ void MyInit()
 void TimerFunction(int value)
 {
 	//行星运行速度
+	if (solarSystem->Crash(player->GetColl()->x, player->GetColl()->y, player->GetColl()->z, player->GetColl()->lx)){
+		RollActive = false;
+	}
 	if (RollActive)
 	{
 		solarSystem->Update();

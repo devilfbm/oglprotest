@@ -15,6 +15,7 @@ Planet::Planet()
 	quadricObj = gluNewQuadric();
 	textureID = 0;
 	origin_x = 0.0f; origin_y = 0.0f; origin_z = 0.0f;
+	coll_x = 0.0f; coll_y = 0.0f; coll_z = 0.0f;
 	radius = 0.0f; red = 0.0f; green = 0.0f; blue = 0.0f;
 	rollSpeed = 0.0f; speed = 0.0f;
 	roadActive = true; textActive = true;
@@ -26,7 +27,8 @@ Planet::Planet(GLuint texid, GLfloat ox, GLfloat oy, GLfloat oz, GLfloat rd, GLf
 {
 	quadricObj = gluNewQuadric();
 	textureID = texid;
-	origin_x = ox; origin_y = oy; origin_z = oz;
+	origin_x = ox; origin_y = oy; origin_z = oz;	
+	coll_x = origin_x; coll_y = origin_y; coll_z = origin_z;
 	radius = rd; red = r; green = g; blue = b;
 	rollSpeed = rs;
 	speed = 0.0f;
@@ -53,6 +55,9 @@ void Planet::Update()
 {
 	speed += rollSpeed/10;
 	if (speed > 360.0) speed -= 360.0;
+
+	coll_x = sin(rollSpeed * Pi / 180);
+	coll_z = -cos(rollSpeed * Pi / 180);
 }
 
 void Planet::setRoadActive(bool active)

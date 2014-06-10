@@ -22,7 +22,7 @@ SolarSystem::SolarSystem(GLuint* texArray)
 
 void SolarSystem::Init()
 {
-	planetArray[0] = new Planet(textureArray[0], 0.0f, 0.0f, 0.0f, 1.0f, 0.5f, 0.0f, 0.0f, 3.0f, "Sun");
+	planetArray[0] = new Planet(textureArray[4], 0.0f, 0.0f, 0.0f, 1.0f, 0.5f, 0.0f, 0.0f, 3.0f, "Sun");
 	planetArray[1] = new Planet(textureArray[1], 0.0f, 0.0f, 2.0f, 0.2f, 0.7f, 0.7f, 0.4f, 4.8f, "Mercury");
 	planetArray[2] = new Planet(textureArray[2], 5.0f, 0.0f, 0.0f, 0.3f, 0.9f, 0.6f, 0.6f, 3.5f, "Venus");
 	planetArray[3] = new Planet(textureArray[3], -5.0f, 0.0f, 3.0f, 0.3f, 1.0f, 1.0f, 1.0f, 3.0f, "Earth");
@@ -30,7 +30,7 @@ void SolarSystem::Init()
 	planetArray[5] = new Planet(textureArray[5], 6.0f, .1f, 5.0f, 0.34f, 1.0f, 1.0f, 1.0f, 1.3f, "Jupiter");
 	planetArray[6] = new Planet(textureArray[6], 7.0f, 0.0f, -6.0f, 0.22f, 0.7f, 0.6f, 0.3f, 0.94f,"Saturn");
 	planetArray[7] = new Planet(textureArray[7], -9.0f, 0.0f, 8.0f, 0.5f, 0.5f, 0.5f, 0.5f, 0.68f, "Uranus");
-	planetArray[8] = new Planet(textureArray[7], -10.0f, 0.0f, -10.0f, 0.5f, 0.5f, 0.8f, 0.5f, 0.54f, "Neptune");
+	planetArray[8] = new Planet(textureArray[8], -10.0f, 0.0f, -10.0f, 0.5f, 0.5f, 0.8f, 0.5f, 0.54f, "Neptune");
 }
 
 void SolarSystem::Draw()

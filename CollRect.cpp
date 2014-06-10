@@ -10,7 +10,7 @@ CollRect::CollRect()
 CollRect::CollRect(GLdouble LocX, GLdouble LocY, GLdouble LocZ, GLdouble SizeX, GLdouble SizeY, GLdouble SizeZ)
 {
 	x = LocX;
-	y = LocY;
+	y = LocY / 2;
 	z = LocZ;
 	lx = SizeX;
 	ly = SizeY;
