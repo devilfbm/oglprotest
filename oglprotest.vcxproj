@@ -87,6 +87,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="sky.h" />
     <ClInclude Include="solarSystem.h" />
+    <ClInclude Include="SourceManager.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -99,6 +100,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="sky.cpp" />
     <ClCompile Include="solarSystem.cpp" />
+    <ClCompile Include="SourceManager.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

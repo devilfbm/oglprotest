@@ -42,7 +42,7 @@
 #include "CollRect.h"
 #include "Player.h"
 #include "solarSystem.h"
-
+#include "SourceManager.h"
 //光照参数
 //W = 0.0f 无穷远光
 GLfloat LightPos[4] = { .0f, .0f, .0f, 1.0f };
@@ -72,7 +72,7 @@ static Camera *camera = new Camera();
 static Sky *sky = new Sky();
 static CollRect *collrect = new CollRect();
 static Player *player = new Player(camera, collrect);
-
+static SourceManager *sourcemanager = new SourceManager();
 SolarSystem *solarSystem;
 
 //添加菜单
@@ -190,10 +190,18 @@ void RenderScene(void)
 	glLightfv(GL_LIGHT0, GL_POSITION, LightPos);
 	glLightfv(GL_LIGHT1, GL_POSITION, LightPos);
 
-	solarSystem->Draw();
+	//solarSystem->Draw();
 
 	sky->InitSky(0.0f, 0.0f, 0.0f, 20.0f, StarMap[9]);
 	sky->ShowSky();
+	int nodesSize = (sourcemanager->out_vertices_list)[0].size();
+	glBegin(GL_TRIANGLES);
+	for (int i = 0; i < nodesSize; i++)
+	{
+		glNormal3f((sourcemanager->out_normals_list)[0][i].x, (sourcemanager->out_normals_list)[0][i].y, (sourcemanager->out_normals_list)[0][i].z);
+		glVertex3f((sourcemanager->out_vertices_list)[0][i].x, (sourcemanager->out_vertices_list)[0][i].y, (sourcemanager->out_vertices_list)[0][i].z);
+	}
+	glEnd();
 
 	//关闭光照
 	glDisable(GL_LIGHTING);
@@ -270,6 +278,7 @@ void MyInit()
 
 	solarSystem = new SolarSystem(StarMap);
 	solarSystem->Init();
+	sourcemanager->Add("D://Homework//虚拟现实//SimpleReconstruction//untitled.obj");
 }
 
 // Called by GLUT library when idle (window not being resized or moved)
