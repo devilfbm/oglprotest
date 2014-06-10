@@ -34,7 +34,7 @@ void Sky::ShowSky()
 	glBindTexture(GL_TEXTURE_2D, T);
 	glTranslatef(X, Y, Z);
 	glRotatef(r, 0.0f, 1.0f, 0.0f); //天空慢慢旋转,模拟云流动
-	glRotatef(90, 1, 0, 0);
+	glRotatef(180, 1, 0, 0);
 	glColor4f(1, 1, 1, 1);
 	gluSphere(qobj, R, 32, 32);
 	glPopMatrix();

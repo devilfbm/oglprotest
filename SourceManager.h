@@ -3,7 +3,7 @@
 *  @file  oglprotest.cpp
 *
 *  项目描述： 天空博物馆
-*  文件描述:  摄像机碰撞实现类
+*  文件描述:  内容管理实现类
 *  适用平台： VS2013/WIN 8.1 (I only tested this)
 *
 *  作者：     李嘉良

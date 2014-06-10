@@ -46,10 +46,11 @@
 //光照参数
 //W = 0.0f 无穷远光
 GLfloat LightPos[4] = { .0f, .0f, .0f, 1.0f };
+GLfloat SunLightPos[4] = { .0f, 5.0f, .0f, 1.0f };
 GLfloat NoLight[] = { 0.0f, 0.0f, 0.0f, 0.0f };
 GLfloat LowLight[] = { 0.25f, 0.25f, 0.25f, 1.0f };
 GLfloat BrightLight[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-GLfloat EmissiveLight[] = { 1.0f, 0.27f, 0.27f, 0.5f };
+GLfloat EmissiveLight[] = { 0.5f, 0.37f, 0.27f, 0.5f };
 
 //雾气
 GLuint FogMode[] = { GL_EXP /* 老式PC用 */, 
@@ -67,6 +68,7 @@ GLUquadricObj *QuadricObj;
 bool RoadActive = true; /* 是否显示轨道 */ 
 bool RollActive = false; /* 是否公转 */
 bool DisplayText = true; /* 是否显示标题 */
+bool SunOrNight = false; /* 是否日夜变化 */
 
 static Camera *camera = new Camera();
 static Sky *sky = new Sky();
@@ -91,6 +93,10 @@ void menuHandler(int value)
 	{
 		RoadActive = !RoadActive;
 		solarSystem->setRoadActive(RoadActive);
+	}
+	else if (value == 3)
+	{
+		SunOrNight = !SunOrNight;
 	}
 	glutPostRedisplay();
 }
@@ -188,15 +194,24 @@ void RenderScene(void)
 	//开启光照
 	glEnable(GL_LIGHTING);
 	glLightfv(GL_LIGHT0, GL_POSITION, LightPos);
-	glLightfv(GL_LIGHT1, GL_POSITION, LightPos);
+	glLightfv(GL_LIGHT1, GL_POSITION, SunLightPos);
 
 	//solarSystem->Draw();
-
-	sky->InitSky(0.0f, 0.0f, 0.0f, 20.0f, StarMap[9]);
+	int flag;
+	if (SunOrNight)
+	{
+		flag = 9;
+	}
+	else
+	{
+		flag = 10;
+	}
+	sky->InitSky(0.0f, 0.0f, 0.0f, 20.0f, StarMap[flag]);
 	sky->ShowSky();
-	int nodesSize = (sourcemanager->out_vertices_list)[0].size();
+
+	long nodesSize = (sourcemanager->out_vertices_list)[0].size();
 	glBegin(GL_TRIANGLES);
-	for (int i = 0; i < nodesSize; i++)
+	for (long i = 0; i < nodesSize; i++)
 	{
 		glNormal3f((sourcemanager->out_normals_list)[0][i].x, (sourcemanager->out_normals_list)[0][i].y, (sourcemanager->out_normals_list)[0][i].z);
 		glVertex3f((sourcemanager->out_vertices_list)[0][i].x, (sourcemanager->out_vertices_list)[0][i].y, (sourcemanager->out_vertices_list)[0][i].z);
@@ -245,7 +260,7 @@ void MyInit()
 	//雾气效果
 	glFogi(GL_FOG_MODE, FogMode[FogFilter]);  /* 设置雾气的模式 */
 	glFogfv(GL_FOG_COLOR, FogColor);   /* 设置雾的颜色 */
-	glFogf(GL_FOG_DENSITY, 0.12f);   /* 设置雾的密度 */
+	glFogf(GL_FOG_DENSITY, 0.3f);   /* 设置雾的密度 */
 	glHint(GL_FOG_HINT, GL_DONT_CARE);   /* 设置系统如何计算雾气 */
 	glFogf(GL_FOG_START, 1.0f);    /* 雾气的开始位置 */
 	glFogf(GL_FOG_END, 50.0f);    /* 雾气的结束位置 */
@@ -273,6 +288,8 @@ void MyInit()
 	LoadTex(filename, StarMap[8]);
 	filename = _T("skybackground.bmp");
 	LoadTex(filename, StarMap[9]);
+	filename = _T("tk-108.bmp");
+	LoadTex(filename, StarMap[10]);
 
 
 
@@ -336,6 +353,7 @@ int main(int argc, char* argv[])
 	glutAddMenuEntry("Stop/Roll", 1);
 	glutAddMenuEntry("Display Name/Blank", 2);
 	glutAddMenuEntry("Display Road/Blank", 3);
+	glutAddMenuEntry("Sun/Night", 4);
 	//把当前菜单注册到鼠标右键
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 
